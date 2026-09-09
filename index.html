@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raj Faluda Center - Handcrafted Faludas, Shakes, Lassis & Ice Creams</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for premium culinary feel -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['DM Sans', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        warmOnyx: {
+                            50: '#f6f5f4',
+                            100: '#e7e5e3',
+                            800: '#231f1d',
+                            900: '#181615',
+                            950: '#100e0d',
+                        },
+                        faludaRose: {
+                            50: '#fff1f2',
+                            100: '#ffe4e6',
+                            200: '#fecdd3',
+                            500: '#f43f5e',
+                            600: '#e11d48',
+                            700: '#be123c',
+                            800: '#9f1239',
+                        },
+                        kesarGold: {
+                            50: '#fffbeb',
+                            100: '#fef3c7',
+                            200: '#fde68a',
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                        },
+                        pistachio: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                        },
+                        creamDark: '#2d1b18'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(2deg); }
+        }
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #181615;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #e11d48;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="bg-warmOnyx-900 text-stone-100 min-h-screen flex flex-col font-sans selection:bg-faludaRose-900 selection:text-faludaRose-100">
+
+    <!-- Sticky Header -->
+    <header class="sticky top-0 z-40 bg-warmOnyx-900/95 backdrop-blur-md border-b border-stone-800/80 shadow-md px-4 lg:px-8 py-3 transition-all">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <!-- Logo Brand -->
+            <a href="#" class="flex items-center space-x-2.5 group">
+                <div class="bg-gradient-to-br from-faludaRose-600 to-kesarGold-500 p-2 rounded-2xl text-white shadow-md shadow-faludaRose-600/20 group-hover:scale-105 transition-transform duration-300">
+                    <span class="text-xl font-bold font-serif leading-none">R</span>
+                </div>
+                <div>
+                    <span class="text-xl font-extrabold tracking-tight font-serif text-faludaRose-500 block leading-tight">RAJ FALUDA</span>
+                    <span class="text-[10px] tracking-widest text-kesarGold-400 font-bold uppercase block -mt-0.5">100% Pure Veg Dessert Center</span>
+                </div>
+            </a>
+
+            <!-- Nav Links -->
+            <nav class="hidden md:flex items-center space-x-8 text-sm font-semibold text-stone-300">
+                <a href="#menu" class="hover:text-faludaRose-400 transition-colors">Specialties Menu</a>
+                <a href="#story" class="hover:text-faludaRose-400 transition-colors">Our Process</a>
+                <a href="#location" class="hover:text-faludaRose-400 transition-colors">Visit Us</a>
+            </nav>
+
+            <!-- CTA/Cart Status -->
+            <div class="flex items-center space-x-3">
+                <!-- Pure Veg Badge Header -->
+                <div class="hidden sm:flex items-center space-x-1.5 bg-emerald-950/60 border border-emerald-800/60 text-emerald-300 text-[11px] font-bold px-3 py-1.5 rounded-xl">
+                    <span class="w-2.5 h-2.5 rounded-sm border border-emerald-500 p-0.5 flex items-center justify-center bg-stone-900">
+                        <span class="w-1 h-1 rounded-full bg-emerald-400"></span>
+                    </span>
+                    <span>100% Pure Veg</span>
+                </div>
+
+                <button onclick="toggleCart()" class="relative bg-warmOnyx-800 hover:bg-stone-800 text-faludaRose-400 p-2.5 rounded-xl border border-stone-800 transition duration-300 flex items-center space-x-2">
+                    <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                    <span id="cartCount" class="bg-faludaRose-600 text-white font-bold text-xs rounded-full h-5 w-5 flex items-center justify-center border-2 border-warmOnyx-900 absolute -top-1.5 -right-1.5">0</span>
+                    <span class="hidden sm:inline font-bold text-xs text-stone-200" id="cartTotalHeader">₹0.00</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Hero Landing Screen -->
+    <section class="relative overflow-hidden bg-gradient-to-b from-warmOnyx-950 to-warmOnyx-900 py-12 lg:py-20 px-4 lg:px-8 border-b border-stone-800/50">
+        <!-- Floating Ambient Backdrops -->
+        <div class="absolute top-10 left-1/4 w-72 h-72 bg-faludaRose-900/30 rounded-full blur-3xl opacity-50 -z-10 animate-pulse"></div>
+        <div class="absolute bottom-10 right-1/4 w-80 h-80 bg-kesarGold-600/20 rounded-full blur-3xl opacity-40 -z-10"></div>
+
+        <div class="max-w-7xl mx-auto grid lg:grid-cols-12 gap-12 items-center">
+            <!-- Left Narrative -->
+            <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                <div class="inline-flex items-center space-x-2 bg-emerald-950/70 border border-emerald-800 text-emerald-300 text-xs font-extrabold px-3.5 py-1.5 rounded-full uppercase tracking-wider shadow-sm">
+                    <span class="w-3 h-3 rounded-sm border border-emerald-500 p-0.5 flex items-center justify-center bg-stone-900">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                    </span>
+                    <span>100% Pure Veg &bull; Scratch Made Daily</span>
+                </div>
+                <h1 class="text-4xl md:text-6xl font-serif font-extrabold text-stone-100 leading-tight">
+                    Pure Indulgence in Every Sip & Scoop.
+                </h1>
+                <p class="text-lg text-stone-300 max-w-2xl leading-relaxed">
+                    At <span class="font-serif font-bold text-faludaRose-400">Raj Faluda Center</span>, we craft our own silky rich 100% vegetarian ice creams, boil milk to velvety perfection, select pure sweeteners, and hand-mix our legendary syrups and toppings.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+                    <a href="#menu" class="w-full sm:w-auto bg-faludaRose-600 hover:bg-faludaRose-500 text-white font-bold px-8 py-4 rounded-2xl shadow-lg shadow-faludaRose-600/30 transition transform hover:-translate-y-0.5 text-center">
+                        Explore Specialties
+                    </a>
+                    <a href="#location" class="w-full sm:w-auto bg-warmOnyx-800 hover:bg-stone-800 text-stone-100 border border-stone-700 font-bold px-8 py-4 rounded-2xl transition transform hover:-translate-y-0.5 text-center flex items-center justify-center gap-2">
+                        <i data-lucide="map-pin" class="w-4 h-4 text-kesarGold-400"></i>
+                        <span>Visit Our Shop</span>
+                    </a>
+                </div>
+
+                <!-- Live Features Mini Bar -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-6 border-t border-stone-800/80 max-w-xl mx-auto lg:mx-0">
+                    <div class="text-center lg:text-left">
+                        <span class="block text-2xl lg:text-3xl font-extrabold text-faludaRose-400 font-serif">20+</span>
+                        <span class="text-xs text-stone-400 font-medium">Signature Faludas</span>
+                    </div>
+                    <div class="text-center lg:text-left">
+                        <span class="block text-2xl lg:text-3xl font-extrabold text-kesarGold-400 font-serif">10+</span>
+                        <span class="text-xs text-stone-400 font-medium">Lassi Flavours</span>
+                    </div>
+                    <div class="text-center lg:text-left">
+                        <span class="block text-2xl lg:text-3xl font-extrabold text-emerald-400 font-serif">15+</span>
+                        <span class="text-xs text-stone-400 font-medium">Shake Flavours</span>
+                    </div>
+                    <div class="text-center lg:text-left">
+                        <span class="block text-2xl lg:text-3xl font-extrabold text-purple-400 font-serif">15+</span>
+                        <span class="text-xs text-stone-400 font-medium">Ice Cream Flavours</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Visual Showcase -->
+            <div class="lg:col-span-5 flex flex-col items-center justify-center relative">
+                <!-- Decorative Frame -->
+                <div class="absolute -inset-4 bg-gradient-to-tr from-kesarGold-600/20 to-faludaRose-600/20 rounded-[2.5rem] transform rotate-3 -z-10 shadow-lg"></div>
+                
+                <div class="bg-warmOnyx-800 p-6 rounded-[2.5rem] shadow-2xl border border-stone-800 max-w-sm w-full relative overflow-hidden">
+                    <div class="absolute top-4 left-4 bg-rose-600 text-white text-[10px] font-extrabold px-3 py-1 rounded-full flex items-center gap-1 z-10 shadow-md">
+                        <span class="h-1.5 w-1.5 rounded-full bg-white animate-pulse"></span> Original Family Recipe
+                    </div>
+                    
+                    <!-- HERO VECTOR MODEL CONTAINER -->
+                    <div class="h-80 w-full bg-stone-900 rounded-2xl flex items-center justify-center relative overflow-hidden shadow-inner border border-stone-800">
+                        <div class="absolute inset-0 bg-radial-gradient from-transparent to-stone-950/60"></div>
+                        
+                        <!-- Premium Interactive Vector Glass Illustration -->
+                        <div class="animate-float relative w-40 h-64 flex flex-col justify-end items-center mt-4">
+                            <!-- Cherry on Top -->
+                            <div class="w-5 h-5 bg-red-600 rounded-full absolute top-[12%] left-[45%] shadow z-20">
+                                <div class="w-1.5 h-3 border-l-2 border-stone-400 absolute bottom-3 left-2.5 rounded-bl-full"></div>
+                            </div>
+                            <!-- Whipped Cream/Toppings visual outline -->
+                            <div class="w-16 h-12 bg-amber-100 rounded-full absolute top-[18%] left-[28%] shadow-sm flex justify-center items-center gap-1 z-10 px-2">
+                                <span class="w-1.5 h-1.5 bg-green-600 rounded-full animate-bounce"></span>
+                                <span class="w-1 h-1 bg-red-500 rounded-full"></span>
+                                <span class="w-1.5 h-1.5 bg-yellow-500 rounded-full animate-bounce delay-75"></span>
+                            </div>
+                            <!-- Ice Cream Scoop visual -->
+                            <div class="w-24 h-16 bg-gradient-to-r from-pink-400 to-pink-500 rounded-t-full absolute top-[28%] shadow"></div>
+                            <!-- Tall glass structure -->
+                            <div class="w-24 h-44 bg-white/20 border-2 border-amber-200/40 rounded-b-[2rem] rounded-t-[0.5rem] backdrop-blur-sm relative overflow-hidden shadow-inner flex flex-col justify-end">
+                                <!-- Layer 3: Flavored Cream Milk -->
+                                <div class="h-28 w-full bg-gradient-to-t from-rose-400/80 to-amber-200/80 relative">
+                                    <div class="absolute top-2 left-4 w-12 h-1 border-b border-yellow-300/80 rounded-full transform rotate-12"></div>
+                                    <div class="absolute top-6 right-3 w-14 h-1 border-b border-yellow-300/80 rounded-full transform -rotate-12"></div>
+                                    <span class="absolute top-8 left-6 w-1 h-1 bg-stone-900 rounded-full opacity-60"></span>
+                                    <span class="absolute top-10 right-8 w-1 h-1 bg-stone-900 rounded-full opacity-60"></span>
+                                    <span class="absolute top-14 left-10 w-1.5 h-1.5 bg-stone-900 rounded-full opacity-60"></span>
+                                </div>
+                                <!-- Layer 2: Vermicelli & Seeds -->
+                                <div class="h-10 w-full bg-gradient-to-t from-stone-900/80 to-rose-300/50 flex justify-around p-1">
+                                    <span class="w-1.5 h-1.5 bg-stone-950 rounded-full self-center"></span>
+                                    <span class="w-1 h-1 bg-stone-900 rounded-full self-start"></span>
+                                    <span class="w-1.5 h-1.5 bg-stone-950 rounded-full self-end"></span>
+                                </div>
+                                <!-- Layer 1: Rose Syrup Base -->
+                                <div class="h-10 w-full bg-gradient-to-t from-faludaRose-600 to-faludaRose-500"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card details -->
+                    <div class="mt-4 space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs font-bold uppercase tracking-widest text-faludaRose-400">Legendary Classic</span>
+                            <div class="flex text-amber-400">
+                                <i data-lucide="star" class="w-3.5 h-3.5 fill-current"></i>
+                                <i data-lucide="star" class="w-3.5 h-3.5 fill-current"></i>
+                                <i data-lucide="star" class="w-3.5 h-3.5 fill-current"></i>
+                                <i data-lucide="star" class="w-3.5 h-3.5 fill-current"></i>
+                                <i data-lucide="star" class="w-3.5 h-3.5 fill-current"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-bold font-serif text-stone-100">Raj Special Rose Faluda</h3>
+                        <p class="text-xs text-stone-400 leading-relaxed">Loaded with house-churned organic rose ice cream, local thick sweetened milk, chewy vermicelli, sweet basil seeds, and hand-cut premium nuts.</p>
+                        <div class="flex items-center justify-between pt-2">
+                            <span class="text-xl font-extrabold text-faludaRose-400">₹140</span>
+                            <button onclick="addToCart('Special Rose Faluda', 140)" class="bg-faludaRose-600 hover:bg-faludaRose-500 text-white text-xs font-extrabold px-4 py-2.5 rounded-xl transition flex items-center gap-1.5 shadow-md">
+                                <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add To Order
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- The House-Made Process -->
+    <section id="story" class="py-16 bg-warmOnyx-950/60 border-y border-stone-800/80 px-4 lg:px-8">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center max-w-2xl mx-auto mb-16 space-y-3">
+                <div class="inline-flex items-center space-x-1.5 bg-emerald-950 text-emerald-300 border border-emerald-800 text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">
+                    <span class="w-2.5 h-2.5 rounded-sm border border-emerald-500 p-0.5 flex items-center justify-center bg-stone-900">
+                        <span class="w-1 h-1 rounded-full bg-emerald-400"></span>
+                    </span>
+                    <span>100% Pure Vegetarian Kitchen</span>
+                </div>
+                <h2 class="text-3xl md:text-4xl font-serif font-extrabold text-stone-100">100% Scratch-Made Ingredients</h2>
+                <div class="w-16 h-1 bg-faludaRose-500 mx-auto rounded-full"></div>
+                <p class="text-stone-400 text-sm md:text-base">We do not buy ready-made processed components. Our kitchen operates daily inside our workshop to offer standard traditional dessert crafting.</p>
+            </div>
+
+            <div class="grid md:grid-cols-4 gap-8">
+                <!-- Process Card 1 -->
+                <div class="bg-warmOnyx-800 p-6 rounded-2xl shadow-sm border border-stone-800 hover:-translate-y-1 transition duration-300 flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="w-12 h-12 rounded-2xl bg-rose-950/80 border border-rose-800 text-rose-400 flex items-center justify-center font-bold">
+                            <i data-lucide="cookie" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="font-bold text-stone-100 text-base">House-Churned Ice Cream</h3>
+                        <p class="text-xs text-stone-400 leading-relaxed">We churn our own ice creams in traditional dairy-wells to ensure a dense, naturally thick texture with no commercial powders or emulsifiers.</p>
+                    </div>
+                    <span class="text-[10px] font-bold text-rose-400 tracking-wider uppercase mt-4 block">Step 01 &bull; Churning</span>
+                </div>
+                <!-- Process Card 2 -->
+                <div class="bg-warmOnyx-800 p-6 rounded-2xl shadow-sm border border-stone-800 hover:-translate-y-1 transition duration-300 flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="w-12 h-12 rounded-2xl bg-amber-950/80 border border-amber-800 text-amber-400 flex items-center justify-center font-bold">
+                            <i data-lucide="soup" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="font-bold text-stone-100 text-base">Thickened Rich Milk Base</h3>
+                        <p class="text-xs text-stone-400 leading-relaxed">Local premium full-fat dairy milk is boiled for several hours with slow heat until it naturally condenses into a velvety sweet nectar.</p>
+                    </div>
+                    <span class="text-[10px] font-bold text-amber-400 tracking-wider uppercase mt-4 block">Step 02 &bull; Slow Boiling</span>
+                </div>
+                <!-- Process Card 3 -->
+                <div class="bg-warmOnyx-800 p-6 rounded-2xl shadow-sm border border-stone-800 hover:-translate-y-1 transition duration-300 flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-950/80 border border-emerald-800 text-emerald-400 flex items-center justify-center font-bold">
+                            <i data-lucide="droplet" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="font-bold text-stone-100 text-base">Home Made Syrups</h3>
+                        <p class="text-xs text-stone-400 leading-relaxed">Our in-house sweetening syrup is brewed utilizing local raw sugarcane juices, cardamom seeds, and wildflower sweet syrups.</p>
+                    </div>
+                    <span class="text-[10px] font-bold text-emerald-400 tracking-wider uppercase mt-4 block">Step 03 &bull; Syrup Brew</span>
+                </div>
+                <!-- Process Card 4 -->
+                <div class="bg-warmOnyx-800 p-6 rounded-2xl shadow-sm border border-stone-800 hover:-translate-y-1 transition duration-300 flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="w-12 h-12 rounded-2xl bg-blue-950/80 border border-blue-800 text-blue-400 flex items-center justify-center font-bold">
+                            <i data-lucide="sparkles" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="font-bold text-stone-100 text-base">Authentic Spices & Seeds</h3>
+                        <p class="text-xs text-stone-400 leading-relaxed">Handpicked red roses, pure Iranian saffron strands, premium hand-chopped cashews, pistachios, and fresh blooming basil seeds (sabja).</p>
+                    </div>
+                    <span class="text-[10px] font-bold text-blue-400 tracking-wider uppercase mt-4 block">Step 04 &bull; Fine Finishing</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu Specialties -->
+    <section id="menu" class="py-16 px-4 lg:px-8">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-12">
+                <div class="space-y-2">
+                    <span class="text-xs font-bold text-faludaRose-400 uppercase tracking-widest block">Handcrafted Treats</span>
+                    <h2 class="text-3xl md:text-4xl font-serif font-extrabold text-stone-100">Explore our Classic Menu</h2>
+                </div>
+                
+                <!-- Category Filters -->
+                <div class="flex flex-wrap gap-2 mt-4 md:mt-0 bg-warmOnyx-800 p-1.5 rounded-2xl border border-stone-800 max-w-full overflow-x-auto">
+                    <button onclick="filterMenu('all')" id="btn-all" class="menu-tab-btn active bg-faludaRose-600 text-white font-bold text-xs px-4 py-2 rounded-xl shadow-sm transition">All Items</button>
+                    <button onclick="filterMenu('faluda')" id="btn-faluda" class="menu-tab-btn text-stone-400 hover:text-stone-100 font-bold text-xs px-4 py-2 rounded-xl transition">Faludas</button>
+                    <button onclick="filterMenu('colddrinks')" id="btn-colddrinks" class="menu-tab-btn text-stone-400 hover:text-stone-100 font-bold text-xs px-4 py-2 rounded-xl transition">Cold Drinks</button>
+                    <button onclick="filterMenu('shakes')" id="btn-shakes" class="menu-tab-btn text-stone-400 hover:text-stone-100 font-bold text-xs px-4 py-2 rounded-xl transition">Shakes</button>
+                    <button onclick="filterMenu('lassi')" id="btn-lassi" class="menu-tab-btn text-stone-400 hover:text-stone-100 font-bold text-xs px-4 py-2 rounded-xl transition">Lassis</button>
+                    <button onclick="filterMenu('icecream')" id="btn-icecream" class="menu-tab-btn text-stone-400 hover:text-stone-100 font-bold text-xs px-4 py-2 rounded-xl transition">Ice Creams</button>
+                </div>
+            </div>
+
+            <!-- Menu Organized Sections Container -->
+            <div id="menuGrid" class="space-y-12">
+                <!-- Dynamically populated via JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Cart Drawer panel -->
+    <div id="cartDrawer" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-end">
+        <div class="bg-warmOnyx-900 h-full w-full max-w-md p-6 shadow-2xl flex flex-col border-l border-stone-800 relative text-stone-100">
+            <button onclick="toggleCart()" class="absolute top-5 right-5 text-stone-400 hover:text-stone-100 transition p-1 rounded-xl hover:bg-stone-800">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+            
+            <div class="flex items-center space-x-2 pb-4 border-b border-stone-800 mb-6">
+                <i data-lucide="shopping-cart" class="w-6 h-6 text-faludaRose-500"></i>
+                <h3 class="text-lg font-extrabold text-stone-100 font-serif">Your Dessert Order</h3>
+            </div>
+
+            <!-- Cart list items -->
+            <div id="cartList" class="flex-1 overflow-y-auto space-y-4 pr-1">
+                <div class="flex flex-col items-center justify-center text-center h-48 space-y-2 opacity-50">
+                    <i data-lucide="glass-water" class="w-10 h-10 text-stone-500"></i>
+                    <p class="text-sm text-stone-400 font-bold">Your cart is currently sweet-empty!</p>
+                    <p class="text-xs text-stone-500 max-w-xs">Explore the Menu specialties and load up on fresh Faludas, Shakes, or homemade Ice Creams.</p>
+                </div>
+            </div>
+
+            <!-- Cart Pricing summary footer -->
+            <div class="pt-6 border-t border-stone-800 space-y-4">
+                <div class="space-y-1.5 text-sm">
+                    <!-- Custom Sweetness Level Customizer -->
+                    <div>
+                        <label class="block text-xs font-bold text-stone-400 mb-1" for="sweetnessLevel">Choose Sweetness (Using Our Homemade Sweetener!):</label>
+                        <select id="sweetnessLevel" class="w-full bg-warmOnyx-800 border border-stone-700 text-stone-200 rounded-xl p-2.5 text-xs focus:outline-none focus:border-faludaRose-500 transition">
+                            <option value="Regular Sweet">Regular Sweet (Chef's Special Recommendation)</option>
+                            <option value="Extra Sweet">Extra Sweet (For Ultimate Sweet Tooth)</option>
+                            <option value="Low Sweet">Low Sweet (Light Sweetener Touch)</option>
+                            <option value="Sugar Free Base">Sugar Free Sweetener Base</option>
+                        </select>
+                    </div>
+
+                    <div class="flex justify-between text-stone-400">
+                        <span>Treat Subtotal</span>
+                        <span id="subtotalPrice">₹0.00</span>
+                    </div>
+                    <div class="flex justify-between text-stone-400">
+                        <span>SGST/CGST (Incl.)</span>
+                        <span>₹0.00</span>
+                    </div>
+                    <div class="flex justify-between font-extrabold text-stone-100 text-base pt-2 border-t border-stone-800">
+                        <span>Total Payable</span>
+                        <span id="totalPrice" class="text-faludaRose-400 font-serif">₹0.00</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="placeMockOrder('Pickup')" class="bg-stone-800 hover:bg-stone-700 border border-stone-700 text-white font-bold py-3.5 rounded-xl transition text-xs text-center flex items-center justify-center gap-1.5">
+                        <i data-lucide="store" class="w-4 h-4 text-kesarGold-400"></i> Place Pickup
+                    </button>
+                    <button onclick="placeMockOrder('Home Delivery')" class="bg-faludaRose-600 hover:bg-faludaRose-500 text-white font-bold py-3.5 rounded-xl transition text-xs text-center flex items-center justify-center gap-1.5 shadow-md">
+                        <i data-lucide="send" class="w-4 h-4"></i> WhatsApp Order
+                    </button>
+                </div>
+                <p class="text-[10px] text-center text-stone-500 leading-normal">
+                    * Placing orders simulates a direct text dispatch to Raj Faluda Center.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact & Store Locator -->
+    <section id="location" class="py-16 bg-warmOnyx-950 text-white px-4 lg:px-8 relative border-t border-stone-800">
+        <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+            
+            <!-- Details left -->
+            <div class="space-y-6">
+                <span class="text-xs font-bold uppercase tracking-widest text-kesarGold-400 block">Freshness Hotspot</span>
+                <h2 class="text-3xl md:text-4xl font-serif font-extrabold leading-tight">Visit Raj Faluda Center</h2>
+                <div class="w-12 h-1 bg-faludaRose-500 rounded-full"></div>
+                <p class="text-stone-400 text-sm leading-relaxed">
+                    Come down and smell the aroma of slowly boiling fresh dairy, handpicked roses, and cardamom spices. Watch our artisans prepare your customized, towering Faludas from scratch!
+                </p>
+
+                <div class="space-y-4 text-sm text-stone-300">
+                    <div class="flex items-start space-x-3.5">
+                        <div class="bg-warmOnyx-800 border border-stone-800 text-faludaRose-400 p-2 rounded-xl shrink-0">
+                            <i data-lucide="map-pin" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <strong class="text-white block font-medium">Flagship Store Location</strong>
+                            <span>Chandi Bazar Road, Central Bank Road, Jalani Jar, Jamnagar, Gujarat - 361001</span>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3.5">
+                        <div class="bg-warmOnyx-800 border border-stone-800 text-kesarGold-400 p-2 rounded-xl shrink-0">
+                            <i data-lucide="clock" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <strong class="text-white block font-medium">Opening Hours</strong>
+                            <span>Everyday: 10:00 AM - 10:30 PM (No breaks)</span>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3.5">
+                        <div class="bg-warmOnyx-800 border border-stone-800 text-emerald-400 p-2 rounded-xl shrink-0">
+                            <i data-lucide="phone" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <strong class="text-white block font-medium">Contact Hotline</strong>
+                            <span>+91 91575 35353</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visual Store Map -->
+            <div class="bg-warmOnyx-900 p-6 rounded-3xl border border-stone-800 shadow-xl space-y-4">
+                <div class="h-56 w-full bg-warmOnyx-950 rounded-2xl relative overflow-hidden flex items-center justify-center border border-stone-800">
+                    <div class="absolute inset-0 opacity-30 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
+                        <div class="bg-faludaRose-600 text-white p-3.5 rounded-2xl shadow-xl shadow-faludaRose-600/30 animate-bounce">
+                            <i data-lucide="store" class="w-6 h-6"></i>
+                        </div>
+                        <span class="bg-warmOnyx-900 border border-stone-700 text-white text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider mt-2 shadow shadow-black">Raj Faluda Center</span>
+                    </div>
+                    <span class="absolute bottom-3 left-3 text-[10px] text-stone-500 font-mono">Map Coordinates: 22.4707° N, 70.0577° E</span>
+                </div>
+                
+                <div class="flex items-center justify-between text-xs text-stone-400 border-t border-stone-800 pt-4">
+                    <span>Questions or bulk corporate event orders?</span>
+                    <a href="mailto:contact@rajfaluda.com" class="text-kesarGold-400 font-bold hover:underline">Email Support</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-warmOnyx-950 text-stone-500 py-12 px-4 lg:px-8 border-t border-stone-800/80 text-center text-xs space-y-4">
+        <div class="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+            <span class="font-serif text-sm font-bold text-stone-400 tracking-wider">© 2026 RAJ FALUDA CENTER. ALL RIGHTS RESERVED.</span>
+            <div class="flex space-x-6 text-stone-400">
+                <a href="#menu" class="hover:text-faludaRose-400 transition-colors">Our Specialties</a>
+                <a href="#story" class="hover:text-faludaRose-400 transition-colors">Homemade Story</a>
+                <a href="#location" class="hover:text-faludaRose-400 transition-colors">Find Us</a>
+            </div>
+        </div>
+        <p class="text-stone-600">All of our signature treats are prepared with 100% pure vegetarian ingredients, filtered water, and organic milk bases under continuous quality audits.</p>
+    </footer>
+
+    <!-- App Dynamic Notification Toast -->
+    <div id="appToast" class="fixed bottom-6 left-6 z-50 bg-warmOnyx-800 text-amber-50 border border-stone-700 px-4 py-3 rounded-2xl shadow-2xl flex items-center space-x-3 translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
+        <div class="bg-faludaRose-600 text-white p-1.5 rounded-xl">
+            <i data-lucide="check" class="w-4 h-4"></i>
+        </div>
+        <div>
+            <p class="text-xs font-bold" id="appToastMessage">Item Added Successfully!</p>
+        </div>
+    </div>
+
+    <!-- Application Script Block -->
+    <script>
+        const baseMenuItems = [
+            // FALUDAS
+            { id: "faluda-1", name: "Rose Faluda", category: "faluda", price: 110, description: "Classic rose syrup base with house-made rose ice cream, vermicelli, and basil seeds.", label: "Classic Favorite", theme: "bg-rose-100/90 border-rose-300 text-rose-950", icon: "sparkles" },
+            { id: "faluda-2", name: "Kesar Pista Faluda", category: "faluda", price: 130, description: "Infused with pure Iranian saffron, cardamom milk, pistachios, and kesar ice cream.", label: "Bestseller", theme: "bg-emerald-100/90 border-emerald-300 text-emerald-950", icon: "crown" },
+            { id: "faluda-3", name: "Sp. Shahi Gulaab Faluda", category: "faluda", price: 150, description: "Rich royal rose blend loaded with dry fruits, house rabdi, and double rose scoops.", label: "Chef's Special", theme: "bg-pink-100/90 border-pink-300 text-pink-950", icon: "heart" },
+            { id: "faluda-4", name: "Sp. Kesar Dryfruit Faluda", category: "faluda", price: 160, description: "Deluxe saffron faluda loaded with roasted cashews, almonds, pistachios, and saffron ice cream.", label: "Premium Choice", theme: "bg-amber-200/80 border-amber-300 text-amber-950", icon: "sparkles" },
+            { id: "faluda-5", name: "Black Currant Faluda", category: "faluda", price: 130, description: "Tangy & sweet black currant syrup with house-churned black currant ice cream.", label: "Berry Delight", theme: "bg-purple-100/90 border-purple-300 text-purple-950", icon: "sparkles" },
+            { id: "faluda-6", name: "Chocolate Faluda", category: "faluda", price: 130, description: "Velvety dark chocolate syrup, chocolate chips, and rich house chocolate ice cream.", label: "Rich Cocoa", theme: "bg-amber-200/80 border-amber-300 text-amber-950", icon: "cookie" },
+            { id: "faluda-7", name: "Butterscotch Faluda", category: "faluda", price: 130, description: "Crunchy butterscotch praline with house-churned butterscotch ice cream.", label: "Crunchy Treat", theme: "bg-yellow-100/90 border-yellow-300 text-yellow-950", icon: "sparkles" },
+            { id: "faluda-8", name: "Mango Faluda", category: "faluda", price: 140, description: "Seasonal fresh Alphonso mango pulp mixed with thick milk and mango ice cream. (Served & made only in season when fresh fruit is available).", label: "Seasonal Special", theme: "bg-orange-100/90 border-orange-300 text-orange-950", icon: "sun" },
+            { id: "faluda-9", name: "Sitaphal Faluda", category: "faluda", price: 150, description: "Seasonal fresh custard apple pulp layered with cream and sitaphal ice cream. (Served & made only in season when fresh fruit is available).", label: "Seasonal Special", theme: "bg-teal-100/90 border-teal-300 text-teal-950", icon: "sparkles" },
+
+            // DOODH COLD DRINKS
+            { id: "drink-1", name: "Rose Doodh Cold Drink", category: "colddrinks", price: 60, description: "Chilled slow-boiled milk flavored with our signature house rose syrup.", label: "Cool & Refreshing", theme: "bg-rose-100/90 border-rose-300 text-rose-950", icon: "cup-soda" },
+            { id: "drink-2", name: "Chocolate Doodh Cold Drink", category: "colddrinks", price: 65, description: "Chilled thick milk with smooth cocoa chocolate syrup base.", label: "Classic Choco", theme: "bg-amber-200/80 border-amber-300 text-amber-950", icon: "cup-soda" },
+            { id: "drink-3", name: "Butterscotch Doodh Cold Drink", category: "colddrinks", price: 65, description: "Chilled sweetened milk infused with rich butterscotch flavor.", label: "Sweet Sip", theme: "bg-yellow-100/90 border-yellow-300 text-yellow-950", icon: "cup-soda" },
+            { id: "drink-4", name: "Blackcurrent Doodh Cold Drink", category: "colddrinks", price: 65, description: "Cold thick milk infused with fruity black currant sweet flavor.", label: "Berry Twist", theme: "bg-purple-100/90 border-purple-300 text-purple-950", icon: "cup-soda" },
+            { id: "drink-5", name: "Strawberry Doodh Cold Drink", category: "colddrinks", price: 65, description: "Chilled milk infused with sweet strawberry flavor and sabja seeds.", label: "Fruity Refresh", theme: "bg-pink-100/90 border-pink-300 text-pink-950", icon: "cup-soda" },
+            { id: "drink-6", name: "Kesar Pista Doodh Cold Drink", category: "colddrinks", price: 75, description: "Chilled saffron and pistachio infused sweetened milk.", label: "Royal Drink", theme: "bg-emerald-100/90 border-emerald-300 text-emerald-950", icon: "crown" },
+            { id: "drink-7", name: "Shahi Gulab Doodh Cold Drink", category: "colddrinks", price: 75, description: "Royal rose flavored chilled milk blended with dry fruit bits.", label: "Special Blend", theme: "bg-rose-200/80 border-rose-300 text-rose-950", icon: "heart" },
+            { id: "drink-8", name: "Sp. Kesar Dryfruit Doodh Cold Drink", category: "colddrinks", price: 85, description: "Chilled saffron milk loaded with chopped cashews, almonds, and pistachios.", label: "House Special", theme: "bg-amber-200/80 border-amber-300 text-amber-950", icon: "sparkles" },
+            { id: "drink-9", name: "Sp. Sitaphal Doodh Cold Drink", category: "colddrinks", price: 85, description: "Fresh seasonal sitaphal pulp mixed into rich chilled milk.", label: "Seasonal", theme: "bg-teal-100/90 border-teal-300 text-teal-950", icon: "sparkles" },
+            { id: "drink-10", name: "Sp. Choco Strawberry Doodh Cold Drink", category: "colddrinks", price: 85, description: "Dual-layer chilled milk combining rich chocolate and strawberry syrup.", label: "Dual Delight", theme: "bg-pink-100/90 border-pink-300 text-stone-900", icon: "sparkles" },
+
+            // MILKSHAKES
+            { id: "shake-1", name: "Cold Cocoa", category: "shakes", price: 90, description: "Thick, silky dark chocolate milk served ice-cold with chocochips.", label: "All-Time Classic", theme: "bg-amber-200/80 border-amber-300 text-amber-950", icon: "coffee" },
+            { id: "shake-2", name: "Badam Milkshake", category: "shakes", price: 100, description: "Rich almond milk blended with cardamom, saffron, and crushed California almonds.", label: "Nourishing", theme: "bg-amber-100/90 border-amber-300 text-amber-950", icon: "crown" },
+            { id: "shake-3", name: "Kitkat Shake", category: "shakes", price: 120, description: "Crushed Kitkat wafers blended with thick milk and topped with crisp chocolate crunch.", label: "Trendy Choice", theme: "bg-red-100/90 border-red-300 text-red-950", icon: "cookie" },
+            { id: "shake-4", name: "Oreo Shake", category: "shakes", price: 110, description: "Crunchy Oreo cookies whipped with cream and cold full-fat milk.", label: "Kids' Favorite", theme: "bg-stone-200 border-stone-300 text-stone-900", icon: "cookie" },
+            { id: "shake-5", name: "Mango Milkshake", category: "shakes", price: 130, description: "Fresh Alphonso mango pulp blended into thick, slow-boiled sweetened milk. (Served & made only in season when fresh fruit is available).", label: "Seasonal Special", theme: "bg-orange-100/90 border-orange-300 text-orange-950", icon: "sun" },
+            { id: "shake-6", name: "Sitaphal Milkshake", category: "shakes", price: 130, description: "Real custard apple pulp blended into thick, slow-boiled sweetened milk. (Served & made only in season when fresh fruit is available).", label: "Seasonal Fruit", theme: "bg-teal-100/90 border-teal-300 text-teal-950", icon: "sparkles" },
+            { id: "shake-7", name: "Cold Coffee", category: "shakes", price: 90, description: "Frothy whipped coffee blend with chilled thick milk and cocoa dusting.", label: "Energy Boost", theme: "bg-amber-200/80 border-amber-300 text-amber-950", icon: "coffee" },
+            { id: "shake-8", name: "Dairymilk Milkshake", category: "shakes", price: 120, description: "Smooth blend featuring melted Dairy Milk chocolate and cold cream milk.", label: "Choco Delight", theme: "bg-purple-200/80 border-purple-300 text-purple-950", icon: "cookie" },
+
+            // LASSIS
+            { id: "lassi-1", name: "Rose Lassi", category: "lassi", price: 80, description: "Thick, creamy churned curd sweetened with house rose syrup and malai topping.", label: "Refreshing", theme: "bg-rose-100/90 border-rose-300 text-rose-950", icon: "glass-water" },
+            { id: "lassi-2", name: "Kesar Pista Lassi", category: "lassi", price: 90, description: "Thick curd churned with aromatic saffron milk and topped with crushed pistachios.", label: "Rich & Creamy", theme: "bg-emerald-100/90 border-emerald-300 text-emerald-950", icon: "crown" },
+            { id: "lassi-3", name: "Chocolate Lassi", category: "lassi", price: 90, description: "Creamy curd blended with rich chocolate cocoa and topped with chocolate shavings.", label: "Choco Twist", theme: "bg-amber-200/80 border-amber-300 text-amber-950", icon: "cookie" },
+            { id: "lassi-4", name: "Pineapple Lassi", category: "lassi", price: 85, description: "Sweet and vibrant tropical pineapple syrup blended into thick rich yogurt.", label: "Fruity Favorite", theme: "bg-yellow-100/90 border-yellow-300 text-yellow-950", icon: "sun" },
+            { id: "lassi-5", name: "Blackcurrent Lassi", category: "lassi", price: 90, description: "Berry-rich black currant flavor blended into smooth churned curd.", label: "Exotic Berry", theme: "bg-purple-100/90 border-purple-300 text-purple-950", icon: "sparkles" },
+            { id: "lassi-6", name: "Butterscotch Lassi", category: "lassi", price: 90, description: "Sweet butterscotch praline taste infused into thick churned malai lassi.", label: "Smooth & Sweet", theme: "bg-amber-100/90 border-amber-300 text-amber-950", icon: "sparkles" },
+            { id: "lassi-7", name: "Mango Lassi", category: "lassi", price: 95, description: "Fresh Alphonso mango pulp blended with rich thick curd and topped with malai. (Served & made only in season when fresh fruit is available).", label: "Seasonal Best", theme: "bg-orange-100/90 border-orange-300 text-orange-950", icon: "sun" },
+
+            // ICE CREAM
+            { id: "ice-1", name: "Rose Ice Cream", category: "icecream", price: 70, description: "House-churned organic rose ice cream made with pure milk and rose extract.", label: "House Special", theme: "bg-rose-100/90 border-rose-300 text-rose-950", icon: "scoop" },
+            { id: "ice-2", name: "Kesar Pista Ice Cream", category: "icecream", price: 80, description: "Rich saffron ice cream packed with freshly ground pistachio nuts.", label: "Royal Scoop", theme: "bg-emerald-100/90 border-emerald-300 text-emerald-950", icon: "scoop" },
+            { id: "ice-3", name: "Sp. Shahi Gulaab Ice Cream", category: "icecream", price: 90, description: "Premium rose ice cream embedded with dried rose petals and cashew nut bits.", label: "Chef's Delight", theme: "bg-pink-100/90 border-pink-300 text-pink-950", icon: "scoop" },
+            { id: "ice-4", name: "Sp. Kesar Dryfruit Ice Cream", category: "icecream", price: 100, description: "Dense saffron ice cream loaded with almonds, cashews, and pistachios.", label: "Dryfruit Deluxe", theme: "bg-amber-200/80 border-amber-300 text-amber-950", icon: "scoop" },
+            { id: "ice-5", name: "Black Currant Ice Cream", category: "icecream", price: 80, description: "Creamy black currant ice cream studded with real black currant berries.", label: "Exotic Berry", theme: "bg-purple-100/90 border-purple-300 text-purple-950", icon: "scoop" },
+            { id: "ice-6", name: "Chocolate Ice Cream", category: "icecream", price: 80, description: "Rich, dense chocolate churned ice cream made with high quality cocoa.", label: "Rich Cocoa", theme: "bg-amber-200/80 border-amber-300 text-amber-950", icon: "scoop" },
+            { id: "ice-7", name: "Butterscotch Ice Cream", category: "icecream", price: 80, description: "Creamy butterscotch ice cream filled with sweet crunchy praline nuggets.", label: "Crunchy Scoop", theme: "bg-yellow-100/90 border-yellow-300 text-yellow-950", icon: "scoop" },
+            { id: "ice-8", name: "Mango Ice Cream", category: "icecream", price: 85, description: "Fresh seasonal Alphonso mango pulp churned into smooth rich ice cream. (Served & made only in season when fresh fruit is available).", label: "Seasonal Best", theme: "bg-orange-100/90 border-orange-300 text-orange-950", icon: "scoop" },
+            { id: "ice-9", name: "Sitaphal Ice Cream", category: "icecream", price: 90, description: "Authentic custard apple ice cream churned with natural fruit pulp. (Served & made only in season when fresh fruit is available).", label: "Seasonal Scoop", theme: "bg-teal-100/90 border-teal-300 text-teal-950", icon: "scoop" }
+        ];
+
+        // Category Metadata for Organised Sections
+        const categoryMeta = {
+            faluda: {
+                title: "Signature Faludas",
+                icon: "sparkles",
+                desc: "Layered with house-churned ice cream, thick milk, silky vermicelli & sabja seeds.",
+                accent: "from-rose-600 to-faludaRose-700",
+                badgeBg: "bg-rose-800 text-white shadow-sm"
+            },
+            colddrinks: {
+                title: "Chilled Doodh Cold Drinks",
+                icon: "cup-soda",
+                desc: "Slow-boiled sweetened milk infused with exotic syrups, spices & dry fruits.",
+                accent: "from-emerald-600 to-teal-700",
+                badgeBg: "bg-emerald-800 text-white shadow-sm"
+            },
+            shakes: {
+                title: "Thick Milkshakes",
+                icon: "coffee",
+                desc: "Rich, creamy milkshakes whipped with cold full-fat milk and crunch.",
+                accent: "from-amber-800 to-stone-900",
+                badgeBg: "bg-stone-900 text-white shadow-sm"
+            },
+            lassi: {
+                title: "Traditional Churned Lassis",
+                icon: "glass-water",
+                desc: "Thick, creamy curd churned with home-made syrups and rich malai topping.",
+                accent: "from-amber-600 to-kesarGold-600",
+                badgeBg: "bg-amber-800 text-white shadow-sm"
+            },
+            icecream: {
+                title: "House-Churned Ice Creams",
+                icon: "sparkles",
+                desc: "Dense, velvety scoops served fresh in bowls from traditional dairy-wells.",
+                accent: "from-purple-700 to-pink-700",
+                badgeBg: "bg-purple-800 text-white shadow-sm"
+            }
+        };
+
+        // State variables
+        let menuItems = [...baseMenuItems];
+        let cart = [];
+        let activeCategory = 'all';
+
+        // Initialize elements
+        window.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            renderMenuItems('all');
+        });
+
+        function renderMenuItems(cat) {
+            activeCategory = cat;
+            const container = document.getElementById('menuGrid');
+            container.innerHTML = '';
+
+            const categoriesToRender = cat === 'all' 
+                ? ['faluda', 'colddrinks', 'shakes', 'lassi', 'icecream'] 
+                : [cat];
+
+            categoriesToRender.forEach(catKey => {
+                const meta = categoryMeta[catKey];
+                const items = menuItems.filter(item => item.category === catKey);
+                if (items.length === 0) return;
+
+                // Create Section Block with high-contrast header card on Warm Onyx
+                const sectionHtml = `
+                    <div class="bg-warmOnyx-950/80 rounded-3xl p-5 md:p-8 border border-stone-800 shadow-xl space-y-6">
+                        <!-- Section Category Header Banner -->
+                        <div class="bg-warmOnyx-800/90 rounded-2xl p-4 md:p-5 border border-stone-700/60 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br ${meta.accent} text-white flex items-center justify-center shadow-md shrink-0">
+                                    <i data-lucide="${meta.icon}" class="w-6 h-6"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-2xl md:text-3xl font-extrabold font-serif text-stone-100 tracking-tight">${meta.title}</h3>
+                                    <p class="text-xs md:text-sm text-stone-400 font-medium">${meta.desc}</p>
+                                </div>
+                            </div>
+                            <span class="${meta.badgeBg} text-xs font-black px-4 py-2 rounded-xl self-start sm:self-center shrink-0 tracking-wider uppercase">
+                                ${items.length} Flavours
+                            </span>
+                        </div>
+
+                        <!-- Item Sub-Grid for this Category -->
+                        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                            ${items.map(item => createCardHtml(item)).join('')}
+                        </div>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', sectionHtml);
+            });
+
+            lucide.createIcons();
+        }
+
+        function createCardHtml(item) {
+            // Scoop Cup SVG for Ice Cream items
+            const isIceCream = item.category === 'icecream';
+            
+            return `
+                <div class="bg-warmOnyx-800 rounded-2xl border border-stone-800 shadow-md hover:border-faludaRose-500/50 transition-all duration-300 flex flex-col justify-between group overflow-hidden">
+                    
+                    <!-- Header container with high contrast badge tags -->
+                    <div class="relative h-28 w-full ${item.theme} border-b border-stone-800 flex items-center justify-between p-5 select-none overflow-hidden">
+                        
+                        <!-- High Contrast Tag Badge -->
+                        <span class="bg-stone-900 text-kesarGold-400 border border-stone-700 text-[11px] font-black px-3.5 py-1.5 rounded-full uppercase tracking-wider shadow-lg z-10 flex items-center gap-1.5">
+                            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-kesarGold-400"></i>
+                            <span>${item.label}</span>
+                        </span>
+
+                        <!-- Pure Veg Symbol Badge -->
+                        <div class="bg-stone-900 border border-stone-700 rounded-lg p-1.5 shadow-sm flex items-center justify-center z-10" title="100% Pure Veg">
+                            <span class="w-3.5 h-3.5 rounded-sm border-2 border-emerald-500 p-0.5 flex items-center justify-center">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                            </span>
+                        </div>
+
+                        <!-- Soft Vector Accent -->
+                        <div class="absolute -right-2 -bottom-2 opacity-15 pointer-events-none text-stone-900">
+                            ${isIceCream ? `
+                                <svg class="w-24 h-24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <circle cx="9" cy="9" r="4.5" />
+                                    <circle cx="15" cy="9" r="4.5" />
+                                    <circle cx="12" cy="6" r="4" />
+                                    <path d="M5 13c0 4.418 3.134 8 7 8s7-3.582 7-8H5z" fill="currentColor" fill-opacity="0.1" />
+                                </svg>
+                            ` : `
+                                <i data-lucide="${item.icon}" class="w-24 h-24"></i>
+                            `}
+                        </div>
+                    </div>
+
+                    <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+                        <div class="space-y-1.5">
+                            <div class="flex justify-between items-start gap-2">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-3 h-3 rounded-sm border border-emerald-500 p-0.5 flex items-center justify-center shrink-0" title="100% Pure Veg">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                                    </span>
+                                    <h3 class="text-base font-bold text-stone-100 font-serif leading-tight group-hover:text-faludaRose-400 transition-colors">${item.name}</h3>
+                                </div>
+                                <span class="text-[10px] font-bold text-stone-400 font-mono capitalize px-2.5 py-0.5 bg-warmOnyx-950 border border-stone-800 rounded-full shrink-0">${item.category}</span>
+                            </div>
+                            <p class="text-xs text-stone-400 leading-relaxed">${item.description}</p>
+                        </div>
+                        <div class="flex items-center justify-between pt-3 border-t border-stone-800">
+                            <span class="text-lg font-extrabold text-stone-100 font-serif">₹${item.price}</span>
+                            <button onclick="addToCart('${item.name}', ${item.price})" class="bg-faludaRose-600 hover:bg-faludaRose-500 text-white text-xs font-extrabold px-4 py-2.5 rounded-xl shadow-md transition-all duration-300 flex items-center gap-1.5">
+                                <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add to Order
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function filterMenu(cat) {
+            const buttons = document.querySelectorAll('.menu-tab-btn');
+            buttons.forEach(btn => {
+                btn.className = "menu-tab-btn text-stone-400 hover:text-stone-100 font-bold text-xs px-4 py-2 rounded-xl transition";
+            });
+
+            const activeBtn = document.getElementById(`btn-${cat}`);
+            if (activeBtn) {
+                activeBtn.className = "menu-tab-btn active bg-faludaRose-600 text-white font-bold text-xs px-4 py-2 rounded-xl shadow-sm transition";
+            }
+            renderMenuItems(cat);
+        }
+
+        function addToCart(name, price) {
+            const matchIndex = cart.findIndex(item => item.name === name);
+            if (matchIndex > -1) {
+                cart[matchIndex].qty += 1;
+            } else {
+                cart.push({ name, price, qty: 1 });
+            }
+
+            updateCartUI();
+            showAppToast(`Added ${name} to Order!`);
+        }
+
+        function updateCartQty(index, offset) {
+            cart[index].qty += offset;
+            if (cart[index].qty <= 0) {
+                cart.splice(index, 1);
+            }
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const listContainer = document.getElementById('cartList');
+            const cartCount = document.getElementById('cartCount');
+            const cartTotalHeader = document.getElementById('cartTotalHeader');
+            const subtotalPrice = document.getElementById('subtotalPrice');
+            const totalPrice = document.getElementById('totalPrice');
+
+            if (cart.length === 0) {
+                listContainer.innerHTML = `
+                    <div class="flex flex-col items-center justify-center text-center h-48 space-y-2 opacity-50">
+                        <i data-lucide="glass-water" class="w-10 h-10 text-stone-500"></i>
+                        <p class="text-sm text-stone-400 font-bold">Your cart is currently sweet-empty!</p>
+                        <p class="text-xs text-stone-500 max-w-xs">Explore the Menu specialties and load up on fresh Faludas, Shakes, or homemade Ice Creams.</p>
+                    </div>
+                `;
+                cartCount.textContent = 0;
+                cartTotalHeader.textContent = "₹0.00";
+                subtotalPrice.textContent = "₹0.00";
+                totalPrice.textContent = "₹0.00";
+                lucide.createIcons();
+                return;
+            }
+
+            listContainer.innerHTML = '';
+            let total = 0;
+            let count = 0;
+
+            cart.forEach((item, index) => {
+                const itemTotal = item.price * item.qty;
+                total += itemTotal;
+                count += item.qty;
+
+                const cardHtml = `
+                    <div class="bg-warmOnyx-800 border border-stone-800 p-4 rounded-xl flex items-center justify-between">
+                        <div class="space-y-1">
+                            <h4 class="text-xs font-bold text-stone-100 leading-tight">${item.name}</h4>
+                            <span class="text-xs font-bold text-faludaRose-400 block">₹${item.price} each</span>
+                        </div>
+                        <div class="flex items-center space-x-3 bg-warmOnyx-900 border border-stone-700 rounded-lg p-1.5 shrink-0">
+                            <button onclick="updateCartQty(${index}, -1)" class="text-stone-400 hover:text-stone-100 transition p-1 rounded-md hover:bg-stone-800">
+                                <i data-lucide="minus" class="w-3.5 h-3.5"></i>
+                            </button>
+                            <span class="text-xs font-bold font-mono px-1 text-stone-100">${item.qty}</span>
+                            <button onclick="updateCartQty(${index}, 1)" class="text-stone-400 hover:text-stone-100 transition p-1 rounded-md hover:bg-stone-800">
+                                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                listContainer.insertAdjacentHTML('beforeend', cardHtml);
+            });
+
+            cartCount.textContent = count;
+            cartTotalHeader.textContent = `₹${total}.00`;
+            subtotalPrice.textContent = `₹${total}.00`;
+            totalPrice.textContent = `₹${total}.00`;
+            
+            lucide.createIcons();
+        }
+
+        function toggleCart() {
+            const drawer = document.getElementById('cartDrawer');
+            if (drawer.classList.contains('hidden')) {
+                drawer.classList.remove('hidden');
+                drawer.classList.add('flex');
+            } else {
+                drawer.classList.add('hidden');
+                drawer.classList.remove('flex');
+            }
+        }
+
+        function placeMockOrder(method) {
+            if (cart.length === 0) {
+                showAppToast("Your cart is empty! Choose delicious items first.");
+                return;
+            }
+
+            const sweetness = document.getElementById('sweetnessLevel').value;
+            let orderText = `*⚡ NEW ORDER FROM RAJ FALUDA CENTER ⚡*\n\n`;
+            orderText += `*Type:* ${method}\n`;
+            orderText += `*Sweetness Level:* ${sweetness}\n\n`;
+            orderText += `*Items Ordered:*\n`;
+            
+            let grandTotal = 0;
+            cart.forEach(item => {
+                orderText += `• ${item.name} (Qty: ${item.qty}) - ₹${item.price * item.qty}\n`;
+                grandTotal += item.price * item.qty;
+            });
+            orderText += `\n*Grand Total Amount:* ₹${grandTotal}.00\n\n`;
+            orderText += `_Thank you for ordering Raj Faluda's legendary handcrafted goodness!_`;
+
+            const dummyInput = document.createElement("textarea");
+            document.body.appendChild(dummyInput);
+            dummyInput.value = orderText;
+            dummyInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(dummyInput);
+
+            const toast = document.getElementById('appToast');
+            const toastMsg = document.getElementById('appToastMessage');
+            
+            toastMsg.innerHTML = `
+                <strong>Mock Order Dispatched (${method})!</strong><br>
+                <span class="text-[10px] text-amber-200/80 font-normal">Order details copied to clipboard.</span>
+            `;
+            
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+            
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-24', 'opacity-0');
+            }, 6000);
+
+            cart = [];
+            updateCartUI();
+            toggleCart();
+        }
+
+        function showAppToast(message) {
+            const toast = document.getElementById('appToast');
+            const toastMsg = document.getElementById('appToastMessage');
+            
+            toastMsg.textContent = message;
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+            
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-24', 'opacity-0');
+            }, 2800);
+        }
+    </script>
+</body>
+</html>
