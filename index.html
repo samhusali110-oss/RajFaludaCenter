@@ -22,6 +22,16 @@
                         serif: ['Playfair Display', 'serif'],
                     },
                     colors: {
+                        rabriCream: {
+                            50: '#fffdf7',
+                            100: '#faf2e4',
+                            200: '#f5e5cb',
+                            300: '#f0d8b2',
+                            400: '#e7c68e',
+                            500: '#dbaa5e',
+                            800: '#4a3818',
+                            900: '#2d210b',
+                        },
                         warmOnyx: {
                             50: '#f6f5f4',
                             100: '#e7e5e3',
@@ -74,18 +84,28 @@
             width: 8px;
         }
         ::-webkit-scrollbar-track {
-            background: #181615;
+            background: #faf2e4;
         }
         ::-webkit-scrollbar-thumb {
             background: #e11d48;
             border-radius: 4px;
         }
+
+        .faluda-slider { height: 310px; position: relative; }
+        .faluda-slide { position:absolute; inset:0; opacity:0; visibility:hidden; transition:opacity .5s ease,visibility .5s; display:flex; align-items:center; justify-content:center; background:#fffdf7; }
+        .faluda-slide.is-active { opacity:1; visibility:visible; }
+        .faluda-slide img { width:100%; height:100%; object-fit:contain; image-rendering:auto; }
+        .faluda-arrow { position:absolute; top:50%; transform:translateY(-50%); z-index:2; background:rgba(255,255,255,.93); color:#9f1239; border-radius:999px; width:36px; height:36px; box-shadow:0 2px 8px #0002; font-size:20px; }
+        .faluda-prev { left:10px; } .faluda-next { right:10px; }
+        .faluda-dot { width:9px; height:9px; border-radius:50%; background:#e7c68e; border:0; cursor:pointer; }
+        .faluda-dot.is-active { background:#e11d48; width:22px; border-radius:8px; }
+        @media (prefers-reduced-motion:reduce) { .faluda-slide { transition:none; } }
     </style>
 </head>
-<body class="bg-warmOnyx-900 text-stone-100 min-h-screen flex flex-col font-sans selection:bg-faludaRose-900 selection:text-faludaRose-100">
+<body class="bg-rabriCream-100 text-stone-900 min-h-screen flex flex-col font-sans selection:bg-faludaRose-200 selection:text-faludaRose-900">
 
     <!-- Sticky Header -->
-    <header class="sticky top-0 z-40 bg-warmOnyx-900/95 backdrop-blur-md border-b border-stone-800/80 shadow-md px-4 lg:px-8 py-3 transition-all">
+    <header class="sticky top-0 z-40 bg-rabriCream-100/95 backdrop-blur-md border-b border-amber-900/10 shadow-sm px-4 lg:px-8 py-3 transition-all">
         <div class="max-w-7xl mx-auto flex items-center justify-between">
             <!-- Logo Brand -->
             <a href="#" class="flex items-center space-x-2.5 group">
@@ -93,225 +113,195 @@
                     <span class="text-xl font-bold font-serif leading-none">R</span>
                 </div>
                 <div>
-                    <span class="text-xl font-extrabold tracking-tight font-serif text-faludaRose-500 block leading-tight">RAJ FALUDA</span>
-                    <span class="text-[10px] tracking-widest text-kesarGold-400 font-bold uppercase block -mt-0.5">100% Pure Veg Dessert Center</span>
+                    <span class="text-xl font-extrabold tracking-tight font-serif text-faludaRose-600 block leading-tight">RAJ FALUDA</span>
+                    <span class="text-[10px] tracking-widest text-amber-800 font-bold uppercase block -mt-0.5">100% Pure Veg • Est. 1980s</span>
                 </div>
             </a>
 
             <!-- Nav Links -->
-            <nav class="hidden md:flex items-center space-x-8 text-sm font-semibold text-stone-300">
-                <a href="#menu" class="hover:text-faludaRose-400 transition-colors">Specialties Menu</a>
-                <a href="#story" class="hover:text-faludaRose-400 transition-colors">Our Process</a>
-                <a href="#location" class="hover:text-faludaRose-400 transition-colors">Visit Us</a>
+            <nav class="hidden md:flex items-center space-x-8 text-sm font-semibold text-stone-700">
+                <a href="#menu" class="hover:text-faludaRose-600 transition-colors">Specialties Menu</a>
+                <a href="#story" class="hover:text-faludaRose-600 transition-colors">Our Process</a>
+                <a href="#location" class="hover:text-faludaRose-600 transition-colors">Visit Us</a>
             </nav>
 
             <!-- CTA/Cart Status -->
             <div class="flex items-center space-x-3">
+                <!-- Single Branch Notice Badge -->
+                <div class="hidden lg:flex items-center space-x-1.5 bg-amber-100 border border-amber-300 text-amber-900 text-[11px] font-bold px-3 py-1.5 rounded-xl shadow-sm">
+                    <i data-lucide="shield-check" class="w-3.5 h-3.5 text-amber-700"></i>
+                    <span>Only Single Original Shop (No Branches)</span>
+                </div>
+
                 <!-- Pure Veg Badge Header -->
-                <div class="hidden sm:flex items-center space-x-1.5 bg-emerald-950/60 border border-emerald-800/60 text-emerald-300 text-[11px] font-bold px-3 py-1.5 rounded-xl">
-                    <span class="w-2.5 h-2.5 rounded-sm border border-emerald-500 p-0.5 flex items-center justify-center bg-stone-900">
-                        <span class="w-1 h-1 rounded-full bg-emerald-400"></span>
+                <div class="hidden sm:flex items-center space-x-1.5 bg-emerald-50 border border-emerald-300 text-emerald-800 text-[11px] font-bold px-3 py-1.5 rounded-xl">
+                    <span class="w-2.5 h-2.5 rounded-sm border border-emerald-600 p-0.5 flex items-center justify-center bg-white">
+                        <span class="w-1 h-1 rounded-full bg-emerald-600"></span>
                     </span>
                     <span>100% Pure Veg</span>
                 </div>
 
-                <button onclick="toggleCart()" class="relative bg-warmOnyx-800 hover:bg-stone-800 text-faludaRose-400 p-2.5 rounded-xl border border-stone-800 transition duration-300 flex items-center space-x-2">
+                <a href="https://www.zomato.com/jamnagar/raj-faluda-center-jamnagar-locality/order" target="_blank" rel="noopener noreferrer" class="hidden md:inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition shadow-sm">Order on Zomato ↗</a>
+                <button onclick="toggleCart()" class="relative bg-rabriCream-200 hover:bg-rabriCream-300 text-faludaRose-700 p-2.5 rounded-xl border border-amber-300/60 transition duration-300 flex items-center space-x-2">
                     <i data-lucide="shopping-bag" class="w-5 h-5"></i>
-                    <span id="cartCount" class="bg-faludaRose-600 text-white font-bold text-xs rounded-full h-5 w-5 flex items-center justify-center border-2 border-warmOnyx-900 absolute -top-1.5 -right-1.5">0</span>
-                    <span class="hidden sm:inline font-bold text-xs text-stone-200" id="cartTotalHeader">₹0.00</span>
+                    <span id="cartCount" class="bg-faludaRose-600 text-white font-bold text-xs rounded-full h-5 w-5 flex items-center justify-center border-2 border-rabriCream-100 absolute -top-1.5 -right-1.5">0</span>
+                    <span class="hidden sm:inline font-bold text-xs text-stone-800" id="cartTotalHeader">₹0.00</span>
                 </button>
             </div>
         </div>
     </header>
 
     <!-- Main Hero Landing Screen -->
-    <section class="relative overflow-hidden bg-gradient-to-b from-warmOnyx-950 to-warmOnyx-900 py-12 lg:py-20 px-4 lg:px-8 border-b border-stone-800/50">
+    <section class="relative overflow-hidden bg-gradient-to-b from-rabriCream-200 to-rabriCream-100 py-12 lg:py-20 px-4 lg:px-8 border-b border-amber-900/10">
         <!-- Floating Ambient Backdrops -->
-        <div class="absolute top-10 left-1/4 w-72 h-72 bg-faludaRose-900/30 rounded-full blur-3xl opacity-50 -z-10 animate-pulse"></div>
-        <div class="absolute bottom-10 right-1/4 w-80 h-80 bg-kesarGold-600/20 rounded-full blur-3xl opacity-40 -z-10"></div>
+        <div class="absolute top-10 left-1/4 w-72 h-72 bg-faludaRose-200/50 rounded-full blur-3xl opacity-60 -z-10 animate-pulse"></div>
+        <div class="absolute bottom-10 right-1/4 w-80 h-80 bg-amber-200/60 rounded-full blur-3xl opacity-50 -z-10"></div>
 
         <div class="max-w-7xl mx-auto grid lg:grid-cols-12 gap-12 items-center">
             <!-- Left Narrative -->
             <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
-                <div class="inline-flex items-center space-x-2 bg-emerald-950/70 border border-emerald-800 text-emerald-300 text-xs font-extrabold px-3.5 py-1.5 rounded-full uppercase tracking-wider shadow-sm">
-                    <span class="w-3 h-3 rounded-sm border border-emerald-500 p-0.5 flex items-center justify-center bg-stone-900">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                    </span>
-                    <span>100% Pure Veg &bull; Scratch Made Daily</span>
+                <div class="inline-flex flex-wrap items-center justify-center lg:justify-start gap-2">
+                    <div class="inline-flex items-center space-x-2 bg-emerald-100/80 border border-emerald-300 text-emerald-900 text-xs font-extrabold px-3.5 py-1.5 rounded-full uppercase tracking-wider shadow-sm">
+                        <span class="w-3 h-3 rounded-sm border border-emerald-600 p-0.5 flex items-center justify-center bg-white">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+                        </span>
+                        <span>100% Pure Veg &bull; Scratch Made Daily</span>
+                    </div>
+                    <div class="inline-flex items-center space-x-1.5 bg-amber-100 border border-amber-300 text-amber-900 text-xs font-extrabold px-3.5 py-1.5 rounded-full uppercase tracking-wider shadow-sm">
+                        <i data-lucide="award" class="w-3.5 h-3.5 text-amber-700"></i>
+                        <span>Est. 1980s &bull; Original & Only Branch</span>
+                    </div>
                 </div>
-                <h1 class="text-4xl md:text-6xl font-serif font-extrabold text-stone-100 leading-tight">
+                <h1 class="text-4xl md:text-6xl font-serif font-extrabold text-stone-900 leading-tight">
                     Pure Indulgence in Every Sip & Scoop.
                 </h1>
-                <p class="text-lg text-stone-300 max-w-2xl leading-relaxed">
-                    At <span class="font-serif font-bold text-faludaRose-400">Raj Faluda Center</span>, we craft our own silky rich 100% vegetarian ice creams, boil milk to velvety perfection, select pure sweeteners, and hand-mix our legendary syrups and toppings.
+                <p class="text-lg text-stone-700 max-w-2xl leading-relaxed">
+                    At <span class="font-serif font-bold text-faludaRose-600">Raj Faluda Center</span>, we craft our own silky rich 100% vegetarian ice creams, boil milk to velvety perfection, select pure sweeteners, and hand-mix our legendary syrups and toppings.
                 </p>
                 
                 <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
                     <a href="#menu" class="w-full sm:w-auto bg-faludaRose-600 hover:bg-faludaRose-500 text-white font-bold px-8 py-4 rounded-2xl shadow-lg shadow-faludaRose-600/30 transition transform hover:-translate-y-0.5 text-center">
                         Explore Specialties
                     </a>
-                    <a href="#location" class="w-full sm:w-auto bg-warmOnyx-800 hover:bg-stone-800 text-stone-100 border border-stone-700 font-bold px-8 py-4 rounded-2xl transition transform hover:-translate-y-0.5 text-center flex items-center justify-center gap-2">
-                        <i data-lucide="map-pin" class="w-4 h-4 text-kesarGold-400"></i>
+                    <a href="https://www.zomato.com/jamnagar/raj-faluda-center-jamnagar-locality/order" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white font-bold px-8 py-4 rounded-2xl shadow-md transition text-center">Order on Zomato ↗</a>
+                    <a href="#location" class="w-full sm:w-auto bg-white hover:bg-amber-50 text-stone-800 border border-amber-300/80 font-bold px-8 py-4 rounded-2xl transition transform hover:-translate-y-0.5 text-center flex items-center justify-center gap-2 shadow-sm">
+                        <i data-lucide="map-pin" class="w-4 h-4 text-amber-600"></i>
                         <span>Visit Our Shop</span>
                     </a>
                 </div>
 
                 <!-- Live Features Mini Bar -->
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-6 border-t border-stone-800/80 max-w-xl mx-auto lg:mx-0">
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-6 border-t border-amber-900/10 max-w-xl mx-auto lg:mx-0">
                     <div class="text-center lg:text-left">
-                        <span class="block text-2xl lg:text-3xl font-extrabold text-faludaRose-400 font-serif">20+</span>
-                        <span class="text-xs text-stone-400 font-medium">Signature Faludas</span>
+                        <span class="block text-2xl lg:text-3xl font-extrabold text-faludaRose-600 font-serif">20+</span>
+                        <span class="text-xs text-stone-600 font-medium">Signature Faludas</span>
                     </div>
                     <div class="text-center lg:text-left">
-                        <span class="block text-2xl lg:text-3xl font-extrabold text-kesarGold-400 font-serif">10+</span>
-                        <span class="text-xs text-stone-400 font-medium">Lassi Flavours</span>
+                        <span class="block text-2xl lg:text-3xl font-extrabold text-amber-700 font-serif">10+</span>
+                        <span class="text-xs text-stone-600 font-medium">Lassi Flavours</span>
                     </div>
                     <div class="text-center lg:text-left">
-                        <span class="block text-2xl lg:text-3xl font-extrabold text-emerald-400 font-serif">15+</span>
-                        <span class="text-xs text-stone-400 font-medium">Shake Flavours</span>
+                        <span class="block text-2xl lg:text-3xl font-extrabold text-emerald-700 font-serif">15+</span>
+                        <span class="text-xs text-stone-600 font-medium">Shake Flavours</span>
                     </div>
                     <div class="text-center lg:text-left">
-                        <span class="block text-2xl lg:text-3xl font-extrabold text-purple-400 font-serif">15+</span>
-                        <span class="text-xs text-stone-400 font-medium">Ice Cream Flavours</span>
+                        <span class="block text-2xl lg:text-3xl font-extrabold text-purple-700 font-serif">15+</span>
+                        <span class="text-xs text-stone-600 font-medium">Ice Cream Flavours</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Right Visual Showcase -->
+            <!-- Customer product photo slider in the homepage header -->
             <div class="lg:col-span-5 flex flex-col items-center justify-center relative">
-                <!-- Decorative Frame -->
-                <div class="absolute -inset-4 bg-gradient-to-tr from-kesarGold-600/20 to-faludaRose-600/20 rounded-[2.5rem] transform rotate-3 -z-10 shadow-lg"></div>
-                
-                <div class="bg-warmOnyx-800 p-6 rounded-[2.5rem] shadow-2xl border border-stone-800 max-w-sm w-full relative overflow-hidden">
-                    <div class="absolute top-4 left-4 bg-rose-600 text-white text-[10px] font-extrabold px-3 py-1 rounded-full flex items-center gap-1 z-10 shadow-md">
-                        <span class="h-1.5 w-1.5 rounded-full bg-white animate-pulse"></span> Original Family Recipe
+                <div class="bg-white p-5 rounded-[2.5rem] shadow-xl border border-amber-200/90 max-w-sm w-full">
+                    <div class="flex items-center justify-between mb-3 gap-2">
+                        <span class="text-xs font-extrabold uppercase tracking-wider text-faludaRose-600">Our Real Faluda Photos</span>
+                        <span class="text-xs text-stone-500" id="faludaSlideCount" aria-live="polite">1 / 8</span>
                     </div>
-                    
-                    <!-- HERO VECTOR MODEL CONTAINER -->
-                    <div class="h-80 w-full bg-stone-900 rounded-2xl flex items-center justify-center relative overflow-hidden shadow-inner border border-stone-800">
-                        <div class="absolute inset-0 bg-radial-gradient from-transparent to-stone-950/60"></div>
-                        
-                        <!-- Premium Interactive Vector Glass Illustration -->
-                        <div class="animate-float relative w-40 h-64 flex flex-col justify-end items-center mt-4">
-                            <!-- Cherry on Top -->
-                            <div class="w-5 h-5 bg-red-600 rounded-full absolute top-[12%] left-[45%] shadow z-20">
-                                <div class="w-1.5 h-3 border-l-2 border-stone-400 absolute bottom-3 left-2.5 rounded-bl-full"></div>
-                            </div>
-                            <!-- Whipped Cream/Toppings visual outline -->
-                            <div class="w-16 h-12 bg-amber-100 rounded-full absolute top-[18%] left-[28%] shadow-sm flex justify-center items-center gap-1 z-10 px-2">
-                                <span class="w-1.5 h-1.5 bg-green-600 rounded-full animate-bounce"></span>
-                                <span class="w-1 h-1 bg-red-500 rounded-full"></span>
-                                <span class="w-1.5 h-1.5 bg-yellow-500 rounded-full animate-bounce delay-75"></span>
-                            </div>
-                            <!-- Ice Cream Scoop visual -->
-                            <div class="w-24 h-16 bg-gradient-to-r from-pink-400 to-pink-500 rounded-t-full absolute top-[28%] shadow"></div>
-                            <!-- Tall glass structure -->
-                            <div class="w-24 h-44 bg-white/20 border-2 border-amber-200/40 rounded-b-[2rem] rounded-t-[0.5rem] backdrop-blur-sm relative overflow-hidden shadow-inner flex flex-col justify-end">
-                                <!-- Layer 3: Flavored Cream Milk -->
-                                <div class="h-28 w-full bg-gradient-to-t from-rose-400/80 to-amber-200/80 relative">
-                                    <div class="absolute top-2 left-4 w-12 h-1 border-b border-yellow-300/80 rounded-full transform rotate-12"></div>
-                                    <div class="absolute top-6 right-3 w-14 h-1 border-b border-yellow-300/80 rounded-full transform -rotate-12"></div>
-                                    <span class="absolute top-8 left-6 w-1 h-1 bg-stone-900 rounded-full opacity-60"></span>
-                                    <span class="absolute top-10 right-8 w-1 h-1 bg-stone-900 rounded-full opacity-60"></span>
-                                    <span class="absolute top-14 left-10 w-1.5 h-1.5 bg-stone-900 rounded-full opacity-60"></span>
-                                </div>
-                                <!-- Layer 2: Vermicelli & Seeds -->
-                                <div class="h-10 w-full bg-gradient-to-t from-stone-900/80 to-rose-300/50 flex justify-around p-1">
-                                    <span class="w-1.5 h-1.5 bg-stone-950 rounded-full self-center"></span>
-                                    <span class="w-1 h-1 bg-stone-900 rounded-full self-start"></span>
-                                    <span class="w-1.5 h-1.5 bg-stone-950 rounded-full self-end"></span>
-                                </div>
-                                <!-- Layer 1: Rose Syrup Base -->
-                                <div class="h-10 w-full bg-gradient-to-t from-faludaRose-600 to-faludaRose-500"></div>
-                            </div>
-                        </div>
+                    <div class="faluda-slider relative overflow-hidden rounded-2xl bg-rabriCream-50 border border-amber-200" aria-label="Raj Faluda Center product photo slideshow" aria-roledescription="carousel" tabindex="0">
+                        <div class="faluda-slide is-active" role="group" aria-roledescription="slide" aria-label="1 of 8: Black Currant" aria-hidden="false"><img src="data:image/webp;base64,UklGRvACAABXRUJQVlA4IOQCAAAQGACdASqCAIIAPu10s1MppyS0JZSZioAdiWcA0q2NXQKUwzNKS/jKptrufaqCj6UfG2x6Wl9Y33p5hJhWy+zrtBxuUYfY9DSc/xjz62QmXcS0q4v75QleFgCdOuYwcnK+r2zgvS5nPvdMtJRfUJCEMU8vk90/D3KYnCcXxKF4VuGUbPtpctBhsobpSmGkwAyDCjPweY+TKXyMV93lH/ILilkKym2tsMgEalf8UGCtLt+4K9x0+pYWwcRlv9A18QCm/82uwRSCngAA/ucwyFnDobv84a+q33V4/MQ5+7DLFy3Sc9NUNFC4OWcXcKKNu9A1QLTgYnGgdahIkOOiGzLa4pUU8nkoRbmXzQI90I19PiBslGEqfC06KwMgeMN2R04aJxZjt4ISlXy8yDLx/dNHAfytM8ll3dJP7tNw0UZ59IvgUZ2ZmNJeC0Km7jvAA91I2ITeAul9v6XAUvUdxTfkcNicCcZw2yASyF/8xfAZirD6D4Pem9JxMiRDIMy1jSG+bqwdfSMNoZyQB35C9TFOO15hTKEz1L/7s58vqjZ9VSL72tWf7rci4O1GZK3323JtOLJudmV6SPO/sfi3NU0sJyVBdoFtty+OBG1a9Dx83WIhxCzHcBdmDZ999roN+IQv8jKh3Y/YDc0i/7x8zHApYLRDvjD05MVqt/klvRpk7CocSEDNn38Kb9JPiTZ8YEZ5dwxWBdhYGPlE27qrN1YW5Gd8RDl990yBXVCXvhyF29ePYgPple4xK0JeYgW58LQZDVHxXtQJ88NqINBjO8H6TWMCw+rDXhisCrTgO59UAJNdbVCEXpHOPI/KCCEGlngxAQ2eUVRgXEqtXMDCDhxfvOzwe14wfTqZdcb6Al2qQpgM2qVWGdlZ8ZhgD06tOvXRR5aykiMR8H+FYE6AaA831WYULCQIep5IZCdTCskhUG0gcqL1i3Sx4i8sivlt7a1fdpoyuJAT2dxLDbxa+dJjRAAAAA==" alt="Raj Faluda Center Black Currant dessert" loading="eager"></div>
+                        <div class="faluda-slide " role="group" aria-roledescription="slide" aria-label="2 of 8: Butterscotch" aria-hidden="true"><img src="data:image/webp;base64,UklGRjwDAABXRUJQVlA4IDADAAAwGwCdASqCAIIAPtlgqE6oJaQsq9d6MZAbCWcAzhu2dTgAlmMtTdALHbsliPhnJwQo+ykUgGGaFcZArbvzTtutVGw8A7DjQogLAytaZ62DXFpBLIRnQtrnJGyG1SlpmJ+2IaPD0JqIBhmBb/HG8s5z74tVQN1jGr6wWz/qf7H3iHsBse1P4mqNTmRvN3U9Z4dcya6TDoKUQAEWpH+7FX2tjT2l5vWEPcTZJP1K5NkW3dLGOw1wxAFXKF2Td7MMMPq5/Lbr/3TQ/sNGdyW4oA1//Cbue0e0ZV41Z6tRA8qTHkAQAP7qn0hPZzrpYFpOuEDwV4UU8gJpn8aHwT9D2PbBdXgW16HUwNRUeOkHd1jXVVWO4HkvJRATPev382pQGgvWc6e4/0hn2qgAGpIALVk/n4VXjIHiKJ22yK8a3rYtRSenL7UWD9shzluTTp1HKWeD3PCsThmqp9BgpnSsexaVBdjhpbQAA1BdpfosiV9ikc5CfceQQl9qpb1+o16K/zie9so+P0LO5i2XeT016fVnvjxqqcKk1kLpxfn9mw6hpW+9NPuKWPfewmgvUmTaYShPl/rH7zgkJUQEBxBiKN+TV42SAphjfKM+AbxoKqlTyytVuodanb/7+5G4JdSee4uWnXv23Bs4KnAODOJHRNQrfF77S4aywyFl7ehSXa2me7CjOcBSRrNGFKAsBkgWn9aoYm8fsZ6o9ccUhInN84HqYVIzxBPPqj2Iwy85GxDi8Gd3xJIiZVYin1gvS/aizW3jeSmieRY7lf6IM3R9SmCsKbE+V5bsCeWLU4+gyjnY3ittNc8rRIOxDGv27c2M82zAn2Ql0EbLoIxXjqCQ4zgHruFPzeWCOIc/diu3QjjCZkbPMvSZ7vK5jS/XlyS3/3IUtfEk7noL2nvj57pvy6Mequv5TsjxQsTc8c6u9+Gadt74OWB8e+UwTQyJTw64GTpENKxYkZczYw0t/Ooh8iaMrDdOmShqNwOsLQw5FNeTLmzsZPGAvLCeH7dd1qAm2fzbk50Q5eEGvC2ZjvTNBOtmsxYpoPljrvTfmQF/3jYu4GLY6LvktjieSsv+Ys+h0AA=" alt="Raj Faluda Center Butterscotch dessert" loading="lazy"></div>
+                        <div class="faluda-slide " role="group" aria-roledescription="slide" aria-label="3 of 8: Choco Strawberry" aria-hidden="true"><img src="data:image/webp;base64,UklGRt4DAABXRUJQVlA4INIDAAAwHACdASqCAIIAPu12sFMpp6UoIzQLKTAdiWcIkCc7N/H8cVNWep2ISdmXq3IbOXuZizJUcd2bZBnOHt7VftyVVTzrdCX8XFTvR4IknrW35uOWCndg4d/GyAsFDb9V1w5fY8UTGdAYYhpyIP5qC9KV1qWwaVp6yOxy5FmThhZ8QodzfWNvDaGwq1JMZhsl4Z4e98+jI5ChJMX0oRySj/NWpAvuYtqiCSp4KVrjr9/9QuTLzrkgPJMFEbOeo3XNd9u0P/U3DDa5WdquozFchVRWNV11n//FI4FD8znBDuvmbPQKCtYyZVzhiUQA/n/XC74V/E2wNiPAD/SCda4U8AduKpVOtiYvennUtGHDYhAHUvtFLJN0pcU7TbHu7gyvf3/OkmSqrx0tWRIa0eXqr3U5sbGadCqJ/o/v0h5owHe7Lg9w9GwGDT7CQHD4O7PxgyWQSGsQjhAuKe5mjde2Lq2/nY2MglClDMD4tyuNLsLYvoX8rBoCQbMUsdfPo5M3eM9+miKM2vCe3fGGjJHXzK/C2FaxhZsqD8qBBcjp+Jc+x3tk6r/zcjmr1VxutjnRmTIZV9o4BvTTk2MI/RzX/dFKrwzmrjG6iaz82KFsDACf7mgAWAKHxPlR93Rpa2BJGVR5XYFfKb5xBwmbsgDceRDjwJOSMVrmcVAIe49x8MuBSYFbx9gFh66+hLG2sRVKqtYfdyULoA1zosZRZeINgfripPPuDYC2kh2TN289CCzNXUC+VUxsV5vAqH+zP2mPL/UwMK9FYXDq91sOtjOF+MJ7TSoS0rbv0eEA2a1Q2N2e6xoDFsagRimP1pJUUK3NyNGzNXeE5gB8JTDr02dmBUYc03sfuXm9+kBHcpqLrzyziKLOg7vor465xgTmXUxYtREKCCJhn/hs/Cht73Dj5A+9SFXIqgMK9hBRe9LkiJ7ssIr/Do5HSlnyPJSgZ1EInY8PDujQupy0ZUD6jSRBa7MKEyzrGIQiQjG/5jLcedtWwR+uKRiAuBobOYLO66DR9mtQV8zDKbV/lwBZnqgScN1REV3c+7+tGkznvoHZZNvDT9AKexsulUEpXQLvnxKRI+npeM/WAujibGRh+LlQ2smnfEytDBNBtjt+D2DD0N6J2M9zLKrkp4fRo+wENDHUFHGE+S0VDpUqy/WwacTR7Ss2z3B4Tjw0sIwsPkMCli1r2PqW0995qzBPmOyi7nQSjsI7aAngtBb5UZGj89xIPP9W0N0m6/y/LSdSUR5TL5QP/s3yv4s0lIVhTxLOJyyKQoa3PdKAdzFUxPl+FhVWLyTQAAA=" alt="Raj Faluda Center Choco Strawberry dessert" loading="lazy"></div>
+                        <div class="faluda-slide " role="group" aria-roledescription="slide" aria-label="4 of 8: Chocolate" aria-hidden="true"><img src="data:image/webp;base64,UklGRh4DAABXRUJQVlA4IBIDAAAwFgCdASqCAIIAPu1ysVSppiQsoNgKUZAdiWcAz01/hrrzOM3vP6qbz2wK1CjScQlFNSmQRRD14fKrLRJgBNt8JEp/4AL6OnLwbW/Lx5yxvKlfUs2nVl8LV12W5dSqJBlUF78u5JagBUTIcJYAUST5xJYZvbDchQ9FIBxhFbKZxwzBua4o67KmAsCpncBZAOdqn2vIYvVKAt8e6TT4S7ESHMAdGfVVGaH06oIXb5glqhXeoU9djGsOUwAA/um/cVnyri5y0gyaS9/nRJRRgv7uf6KDwZ67TvqhGrxcYtl1Fhzcv6BzLgnhv75ZgsDs9dbx3/GNaF43aWzalkbuR/B88k9XpVJiRFWYyvLfXQnzOSbGBCh/2H1aMg3aER5KM7f0BzmnDXEWuPpxSRLsxrw9POxvsry+Cae7DnlbXlIbWFWCcpmm7DcfRKdKEVU7CjARME4GszQrbExxlQP3WHPJ32gBVXO1E1Vq1dnxyliN6/KwIg3k01dUShP9irMRPaP8l5veJLWhLMPIHA+AjqNvWuFhPuzfd1ktCzfNxq93JXtACgKSmpa1OWoIsrjx9XXsfMUkDpB6lq/PtX3nFNDQNVMM7OaIIcNoTwvRRWbeBq5RK8gkG8a9MEi0SfZBdh+XdZzyVeJQBMsKi1kS0WUw5HJsll1BZXB4fjYCGUZycX14TlBsw3VR0zM2jyHqYleEGRC64hYg5eoWFNAKjJ7eioux7/CbZI0Ftp434C9e/dQMLJQDlaQ+CL8280+0dpeCQsDpfZxDD2J0GscwwBzewbQyyNynP7osBwO08gr7D2bmcjF5l4+mdd+ZESoVBw6UFasGcir/Tdz4lXQFOSiByImHiqJt1WF8Bpr5lljQx2FJSWD/ZuyaYLLFujnWzs3diM6gYcHFkF7B7tpMhBeB9htMZrDLs8/RX9pGcW9ZsU0Loh/Cg1vz5iTTo2vAF9ut2I0pxa3fVlWjAWg9YWRY3Wwl/Sayl6P6GctUW36eG066kpB7XUWfW/nfnnwzeiSmEa0VNDaDznUIUTyGpqaAAAA=" alt="Raj Faluda Center Chocolate dessert" loading="lazy"></div>
+                        <div class="faluda-slide " role="group" aria-roledescription="slide" aria-label="5 of 8: Kesar Pista" aria-hidden="true"><img src="data:image/webp;base64,UklGRqwDAABXRUJQVlA4IKADAAAwGwCdASqCAIIAPuVsr1KpJb2rpHLqg7AciWUHBLR7E4zEEE0nZd80MV5GZzA3VSRdPm+FQMyj3nQ+hsaJ5u7S9e2AW46asoUVAtpMD5lfLREMQc1RWF+OBMkeLtntfOqlWQVX1Nti8OL05+XHIG15VzVy3YeYCrJPfZGGsKUXS4VFoRinQhVIuhfz15GKV3OKlqtH0AdGbdhoXxCKfkO2c/qrTr84YnKwLkd9wREWAW5Gtz+LE1YjlSLpHylfCrCpunnxHj5UFNH/m0562h+FPx4fAxFAiPEDIMDFu+YFVfUAAP7lhtnetAunxRJSfzgKrLZgEOYVCP6k5QA1RK1TFxqphobTNeWuav9mvY9koRBkphipgwwNjSLiiIqkZ99/l0UUD3qdxvfCRfZycWJctzjZVKsCCX1hPV2s0zUlabZiHWPmvaQjie6leUmDSDdnP6BxHNs5QrTa4q3Js23bYbXE+mc85dWsEMuEXfRcKRH7nia28+FzFhpwZaCOdLi+cdBmWobjZKSuLOQ75x0krcIXORm+Lvsu31mGjd+Mow1BiusVMRbdC3F0MOwRUyiKpuWTIFtvjuAuiYdYqDp/yVqC/1L4JpoUBlOTfT1j1UeFkDdQGuZauhPD2L8vhsy7lcZRHT5B3khvqtNLkZCm6Xie4IxhdPKdQZZDS45s3Jfl8xjiym23DAVgxDNahCicE6weoV59dw4lNaq/dvr64UGRYF3pxNKzT+JVWdRL9ZpSPWOQ7lA1p32FRjFPRb2EjcHIW4fnJENzu3AQ3ZrljDMKMhCAaKGie7Z+mHIklymTiyk0pVS/btcTh2+NxJOesOgZ3s9GmaHQJUxl0ow7UCCHACUUN50EMOUol5h7DtzlXxaRSXRwG63lXfIH0IJaT3EJ/xsLXQ2cRoZLVHEcjp55HYRUdCT86OJhnDc9Z3pyED+A11E9rhU0IS7v/3iIIHv4Um54kvvD3NQs5k1PyfDyFLk+1sFFbn7QPDEgPSH12686UK8UJqqffRyG+bUJZ6NVAO1uTfV9V2QRK5AD2NibbZJzB9sMsOC0xEn+lJ6GojNLimMrsMpe80Tne+abHfCKxrgXd1NTp1MYX1GaAgi/8FQ1R+s6kccGu+6mnguS0TFNMH/R8QN9Ww9nGJap29lH76U4M/Yi3T/eRQAePAAYQRhiQ/dDZRP8aw7nrw/Zh4h9W/wrB9rx3WmxUDXmiAiu6Cvkr323OmDIAAAA" alt="Raj Faluda Center Kesar Pista dessert" loading="lazy"></div>
+                        <div class="faluda-slide " role="group" aria-roledescription="slide" aria-label="6 of 8: Rose" aria-hidden="true"><img src="data:image/webp;base64,UklGRvQCAABXRUJQVlA4IOgCAADwGQCdASqCAIIAPu1sqE8pprmprRg6qzAdiWcfQFMBWmyASNs5f7V8U7QWI/FNUX1xbHVAdgUYban1/so1PfA/C5907nmm/lGf0xQE99URRC01j/roNNJvMFLfTF/nGgjsd8BAvuwKDYL944WWjfX/A2vug3buqW2SUJeZn4oiFEO7IGL/AeDRrNGPd9IVUHORJ2m2A34fpLxD4hrAm5pi63DFaGFPxbXXe5gyW9vPrsaTTtbWfmJOwBig6OS2vGowm15mHOqDkr61+Kdxck6pBRkqz7PaUAAA/tqiQGg+Ll0rsbgGcOgqftj7ABhkACl+uUe4VLIkXTu5+lVjiOZZl1f8fm37wSwmh3qMjYtx/dPxZ9R04X8zgGk9nYp7BE2xAhMAOj5CfP/Hnm4B9ku+ZqslYGYUH5O/+OUvE2O6MWVvvP53uKs9zKf0gEaYUKgEzfvs/B0s3jY4v0NylP9Wz/pUt76AdGswRxQt2nQ1XhtIpwYlYRR1BqS07HzDGwCAJ7CQ9eLnER4kWoejCPhSgBo7svvzXxVyvHUJqC2B3LbZ4NrwBQJXiPx5FR4b3tliqK5jRyJRmKKmBJzae9706JziVo0ArW+QZ7fwu6R7g8SwdLCOgOFuHPnKi6p7kR2TSsX4QsDJ3B7/PofkpqgII+v1ZpouS1lDOlxl6sy89aeA2HRE+JEwxDTVPbzJh98y12e0AMFnHWk9XGu45Rb1giHc3fQQt9u+o66H3bpwRTbraX7WV+eodi5zrxFgb6Iicx/5ivf89dyw5wx4J9Cc2qdCFG0owNs0lpCQK+bPSr+ha8cQ9enSQTp1pteYM4IfFZrDkAt2JRLDtqIxMaP6HQoKw2jp2q5VztKR6wyFKeCA5dJKkNfIEd/bfOgbmkrbACZ11iXbXDZkpbSieEziKFr6mIBfPHC3F/zZkfhCCx/hUuoRSb0jjQHlDO6ZeJTZdFEZOrVWJY7ov7zuvNxPnVnjhmhgAAA=" alt="Raj Faluda Center Rose dessert" loading="lazy"></div>
+                        <div class="faluda-slide " role="group" aria-roledescription="slide" aria-label="7 of 8: Shahi Gulab" aria-hidden="true"><img src="data:image/webp;base64,UklGRpgDAABXRUJQVlA4IIwDAADQGACdASqCAIIAPu12sFQppyQxITqrEiAdiWUAzrGNtv9Vy+kcuzi6uYrawTVLNHoffzQYqBjR+gfHApemJwMx9dSiTMuGPa2kZnbNgpq4m1VyYiE7GfQotEaFp75gpMPoG9jEbaficROGhLEgQNqF8ckBWXKt0k4ilBMPjtmh36MnJViOf///XV9AQ6l7dGhLgyr/s3LetlrqgAm2H6xtxXwYUYEC/zSFlc2eRJWQWvhfUdI+CSpzR19EIfWTu/FHNPc5xj9ZbU/JxrsHPwAA/uOFVYXZILaWC1+GsHt43o9kPvx8gB81mKjsVsy58ebUHJ5/Dnvw1MwpuMrmVuejKL2/fn1YU+WfRXuJSbkuWwiriDc48TToZYm91roLQ97asN9Id9BKrex3G4ITrzEThv0cwbRA4x44gqfrZAEPW725pzIKS8l+z6NmbG4LHmVFZNeZQSaGlQhYmehRHAFcE8QnqVId74OuKRsJifAKw80r1Z55pjaMK+i+KIXfzNXCuNQRo8QcdKvxrYTApdwR+klQ7YOwH9Y0vo6Yvyu7BKjd+nWOXBRDdNzbJ8GwBVhRboc/TuMFqrRbMPRlYpppW2HBPfzGtjLWCgWjJORskd1Ceu+8DKJh519KLgqWmDGeFA4ohiVkkF5rUbJv56JQGmJx5tqwSAvCPp4LmYmsVcKJqt6E3qmFfH8Nxe269qaDdSa9ZDQZt6cG79UPwJ00axPRiCwejb8k6I0OF9nwHp+1cK9+sK2rEZeQSmWzCWftQfLHK+eeL90lXEgyxe+uBNTC119M7u/F5rDErvpNymW3+0Yso36bXKl+K4+CGlNIzx8NA3MMlNZD3iDvtXwkZgERSfW5Nw50SQb8GKc5+zD01asDP0XWGXZ4d71FSK/Q7qNJz71EhNi4WogTHaE97jcbOpMGy7bMvMqf8gWt/fwa4GO6kiaWUMVbHXMR+ZVJwS8NjBsqfD2JP0Bsj6Mz3O7O7VAMw6EW9vVOQ5hBN+zzgmdGkWTRdKUu43zumG3IJTvEhWAK7XvxuYHlwQg09z/vfAAAykDMDkODGmZysOy4YGSjbHFAdjgc1mXP48n21Nr0wW7ZAH2A0heCWOH1zuDzcc2nFJhL8Cj9FFUGqxDSA+axSHjhPWIvaQnHgUPaPfRJmMA/6XID2hTuFcmWF+M5cDx3R+Z7e6mxchuWiGIifuY02r1wyUAAAA==" alt="Raj Faluda Center Shahi Gulab dessert" loading="lazy"></div>
+                        <div class="faluda-slide " role="group" aria-roledescription="slide" aria-label="8 of 8: Strawberry" aria-hidden="true"><img src="data:image/webp;base64,UklGRtgCAABXRUJQVlA4IMwCAAAwGQCdASqCAIIAPtlmrlEoJSmipNVaUTAbCWUA0PFuvPbAnK0LB3FhokeaV2ywKYInw6O5XsUCPfoRpnmt38i225moeWoPCFnGZzZYYFvUJbOvoxCIxd4Ib3JnXcb7K24NncpBBDLPtFbJObR5Iadk+E/jnWRY2kq3uKs8UCLWPEcRL0mh6341jH7GEG53bImOIxs2L4CiuTRsYiRET78Il5amZ4uNIWh0Qe+iLWtHZmKCUWO2YVDyipzCysQjYVrYhhmGAeHK3qv+6EB7S/FIFFAA/uGVv8JtiEC790KkCCHswvYPMXERZ+zl0VgZEeNwitW6ktLhQJ2u4BuKuIhmfHV2/GUQLiyW7JuR61r06C8a8+94njIjTEe4/Vy7nPsnBssGw3mo57+TJd/cHIZ+pvLhZNCRQAt4XYQS7fDtAYkfypDImjVColDNSUA/i0Wujk5U4xo+XW3UvtAd3dUKbbsGo/dr8SJ4z/6OBy6nJcW9W0H1N507LUghz2CyUs1oQk+Ur+q5VS6lEZVe0OyV3aXTE6Uzec93J9fpHqIALaiHDLjbuXlpYDKvkLkhJdGsaE0uwnuZuYQt5dNbRlZRqWllB6uuVW4iE3eXF7wKF/6z2djpAlbsaN720o2gz1/kNO6EpEyvuUK7Xkd09ryCjoUngdDaPQ2Nf7sDhQrDrlFIlLrUSacxeEdOfY9ukgX/9F/5hgJWtk8AjpQ2o4Ly+Oe+/e66PNclQBYcXC3+AE6vEoP9ihI3vvkKflbB7BkTM/207mnPGCqHG2dDc/QGt6tmMWVwnWEBc7UNIjFkPragtj3QeV8V/CUJZCDoUTGynI5aRKHZiY0COJTTDPctVzY/auWc1lonwXWQXx6RTc1EZZTatqP8dqe0+ZpFndaG3U4FKuZNnLzOTbxJUeWfGJTop1/us4roGVJ0DzD7Vd6d3GqQ1BmOoAAAAA==" alt="Raj Faluda Center Strawberry dessert" loading="lazy"></div>
+                        <button type="button" class="faluda-arrow faluda-prev" aria-label="Previous product photo" onclick="moveFaludaSlide(-1)">&#10094;</button>
+                        <button type="button" class="faluda-arrow faluda-next" aria-label="Next product photo" onclick="moveFaludaSlide(1)">&#10095;</button>
                     </div>
-
-                    <!-- Card details -->
-                    <div class="mt-4 space-y-2">
-                        <div class="flex justify-between items-center">
-                            <span class="text-xs font-bold uppercase tracking-widest text-faludaRose-400">Legendary Classic</span>
-                            <div class="flex text-amber-400">
-                                <i data-lucide="star" class="w-3.5 h-3.5 fill-current"></i>
-                                <i data-lucide="star" class="w-3.5 h-3.5 fill-current"></i>
-                                <i data-lucide="star" class="w-3.5 h-3.5 fill-current"></i>
-                                <i data-lucide="star" class="w-3.5 h-3.5 fill-current"></i>
-                                <i data-lucide="star" class="w-3.5 h-3.5 fill-current"></i>
-                            </div>
+                    <div class="mt-4 flex items-center justify-between gap-3">
+                        <div>
+                            <p class="text-xs text-stone-500 font-semibold">Featured Flavour</p>
+                            <h3 class="text-xl font-bold font-serif text-stone-900" id="faludaSlideTitle">Black Currant</h3>
                         </div>
-                        <h3 class="text-xl font-bold font-serif text-stone-100">Raj Special Rose Faluda</h3>
-                        <p class="text-xs text-stone-400 leading-relaxed">Loaded with house-churned organic rose ice cream, local thick sweetened milk, chewy vermicelli, sweet basil seeds, and hand-cut premium nuts.</p>
-                        <div class="flex items-center justify-between pt-2">
-                            <span class="text-xl font-extrabold text-faludaRose-400">₹140</span>
-                            <button onclick="addToCart('Special Rose Faluda', 140)" class="bg-faludaRose-600 hover:bg-faludaRose-500 text-white text-xs font-extrabold px-4 py-2.5 rounded-xl transition flex items-center gap-1.5 shadow-md">
-                                <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add To Order
-                            </button>
-                        </div>
+                        <button type="button" id="faludaPauseBtn" class="text-xs font-bold text-faludaRose-700 border border-rose-200 rounded-lg px-3 py-2 hover:bg-rose-50" onclick="toggleFaludaAutoplay()" aria-label="Pause slideshow">Pause</button>
                     </div>
+                    <div class="flex justify-center gap-2 mt-4" id="faludaSlideDots" aria-label="Choose a product photo"></div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- The House-Made Process -->
-    <section id="story" class="py-16 bg-warmOnyx-950/60 border-y border-stone-800/80 px-4 lg:px-8">
+    <section id="story" class="py-16 bg-rabriCream-200/60 border-y border-amber-900/10 px-4 lg:px-8">
         <div class="max-w-6xl mx-auto">
             <div class="text-center max-w-2xl mx-auto mb-16 space-y-3">
-                <div class="inline-flex items-center space-x-1.5 bg-emerald-950 text-emerald-300 border border-emerald-800 text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">
-                    <span class="w-2.5 h-2.5 rounded-sm border border-emerald-500 p-0.5 flex items-center justify-center bg-stone-900">
-                        <span class="w-1 h-1 rounded-full bg-emerald-400"></span>
+                <div class="inline-flex items-center space-x-1.5 bg-emerald-100 text-emerald-900 border border-emerald-300 text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">
+                    <span class="w-2.5 h-2.5 rounded-sm border border-emerald-600 p-0.5 flex items-center justify-center bg-white">
+                        <span class="w-1 h-1 rounded-full bg-emerald-600"></span>
                     </span>
                     <span>100% Pure Vegetarian Kitchen</span>
                 </div>
-                <h2 class="text-3xl md:text-4xl font-serif font-extrabold text-stone-100">100% Scratch-Made Ingredients</h2>
+                <h2 class="text-3xl md:text-4xl font-serif font-extrabold text-stone-900">100% Scratch-Made Ingredients</h2>
                 <div class="w-16 h-1 bg-faludaRose-500 mx-auto rounded-full"></div>
-                <p class="text-stone-400 text-sm md:text-base">We do not buy ready-made processed components. Our kitchen operates daily inside our workshop to offer standard traditional dessert crafting.</p>
+                <p class="text-stone-700 text-sm md:text-base">We do not buy ready-made processed components. Our kitchen operates daily inside our workshop to offer standard traditional dessert crafting.</p>
             </div>
 
             <div class="grid md:grid-cols-4 gap-8">
                 <!-- Process Card 1 -->
-                <div class="bg-warmOnyx-800 p-6 rounded-2xl shadow-sm border border-stone-800 hover:-translate-y-1 transition duration-300 flex flex-col justify-between">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-amber-200/80 hover:-translate-y-1 transition duration-300 flex flex-col justify-between">
                     <div class="space-y-4">
-                        <div class="w-12 h-12 rounded-2xl bg-rose-950/80 border border-rose-800 text-rose-400 flex items-center justify-center font-bold">
+                        <div class="w-12 h-12 rounded-2xl bg-rose-100 border border-rose-300 text-rose-600 flex items-center justify-center font-bold">
                             <i data-lucide="cookie" class="w-6 h-6"></i>
                         </div>
-                        <h3 class="font-bold text-stone-100 text-base">House-Churned Ice Cream</h3>
-                        <p class="text-xs text-stone-400 leading-relaxed">We churn our own ice creams in traditional dairy-wells to ensure a dense, naturally thick texture with no commercial powders or emulsifiers.</p>
+                        <h3 class="font-bold text-stone-900 text-base">House-Churned Ice Cream</h3>
+                        <p class="text-xs text-stone-600 leading-relaxed">We churn our own ice creams in traditional dairy-wells to ensure a dense, naturally thick texture with no commercial powders or emulsifiers.</p>
                     </div>
-                    <span class="text-[10px] font-bold text-rose-400 tracking-wider uppercase mt-4 block">Step 01 &bull; Churning</span>
+                    <span class="text-[10px] font-bold text-rose-600 tracking-wider uppercase mt-4 block">Step 01 &bull; Churning</span>
                 </div>
                 <!-- Process Card 2 -->
-                <div class="bg-warmOnyx-800 p-6 rounded-2xl shadow-sm border border-stone-800 hover:-translate-y-1 transition duration-300 flex flex-col justify-between">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-amber-200/80 hover:-translate-y-1 transition duration-300 flex flex-col justify-between">
                     <div class="space-y-4">
-                        <div class="w-12 h-12 rounded-2xl bg-amber-950/80 border border-amber-800 text-amber-400 flex items-center justify-center font-bold">
+                        <div class="w-12 h-12 rounded-2xl bg-amber-100 border border-amber-300 text-amber-700 flex items-center justify-center font-bold">
                             <i data-lucide="soup" class="w-6 h-6"></i>
                         </div>
-                        <h3 class="font-bold text-stone-100 text-base">Thickened Rich Milk Base</h3>
-                        <p class="text-xs text-stone-400 leading-relaxed">Local premium full-fat dairy milk is boiled for several hours with slow heat until it naturally condenses into a velvety sweet nectar.</p>
+                        <h3 class="font-bold text-stone-900 text-base">Thickened Rich Milk Base</h3>
+                        <p class="text-xs text-stone-600 leading-relaxed">Local premium full-fat dairy milk is boiled for several hours with slow heat until it naturally condenses into a velvety sweet nectar.</p>
                     </div>
-                    <span class="text-[10px] font-bold text-amber-400 tracking-wider uppercase mt-4 block">Step 02 &bull; Slow Boiling</span>
+                    <span class="text-[10px] font-bold text-amber-700 tracking-wider uppercase mt-4 block">Step 02 &bull; Slow Boiling</span>
                 </div>
                 <!-- Process Card 3 -->
-                <div class="bg-warmOnyx-800 p-6 rounded-2xl shadow-sm border border-stone-800 hover:-translate-y-1 transition duration-300 flex flex-col justify-between">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-amber-200/80 hover:-translate-y-1 transition duration-300 flex flex-col justify-between">
                     <div class="space-y-4">
-                        <div class="w-12 h-12 rounded-2xl bg-emerald-950/80 border border-emerald-800 text-emerald-400 flex items-center justify-center font-bold">
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-100 border border-emerald-300 text-emerald-700 flex items-center justify-center font-bold">
                             <i data-lucide="droplet" class="w-6 h-6"></i>
                         </div>
-                        <h3 class="font-bold text-stone-100 text-base">Home Made Syrups</h3>
-                        <p class="text-xs text-stone-400 leading-relaxed">Our in-house sweetening syrup is brewed utilizing local raw sugarcane juices, cardamom seeds, and wildflower sweet syrups.</p>
+                        <h3 class="font-bold text-stone-900 text-base">Home Made Syrups</h3>
+                        <p class="text-xs text-stone-600 leading-relaxed">Our in-house sweetening syrup is brewed utilizing local raw sugarcane juices, cardamom seeds, and wildflower sweet syrups.</p>
                     </div>
-                    <span class="text-[10px] font-bold text-emerald-400 tracking-wider uppercase mt-4 block">Step 03 &bull; Syrup Brew</span>
+                    <span class="text-[10px] font-bold text-emerald-700 tracking-wider uppercase mt-4 block">Step 03 &bull; Syrup Brew</span>
                 </div>
                 <!-- Process Card 4 -->
-                <div class="bg-warmOnyx-800 p-6 rounded-2xl shadow-sm border border-stone-800 hover:-translate-y-1 transition duration-300 flex flex-col justify-between">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-amber-200/80 hover:-translate-y-1 transition duration-300 flex flex-col justify-between">
                     <div class="space-y-4">
-                        <div class="w-12 h-12 rounded-2xl bg-blue-950/80 border border-blue-800 text-blue-400 flex items-center justify-center font-bold">
+                        <div class="w-12 h-12 rounded-2xl bg-purple-100 border border-purple-300 text-purple-700 flex items-center justify-center font-bold">
                             <i data-lucide="sparkles" class="w-6 h-6"></i>
                         </div>
-                        <h3 class="font-bold text-stone-100 text-base">Authentic Spices & Seeds</h3>
-                        <p class="text-xs text-stone-400 leading-relaxed">Handpicked red roses, pure Iranian saffron strands, premium hand-chopped cashews, pistachios, and fresh blooming basil seeds (sabja).</p>
+                        <h3 class="font-bold text-stone-900 text-base">Authentic Spices & Seeds</h3>
+                        <p class="text-xs text-stone-600 leading-relaxed">Handpicked red roses, pure Iranian saffron strands, premium hand-chopped cashews, pistachios, and fresh blooming basil seeds (sabja).</p>
                     </div>
-                    <span class="text-[10px] font-bold text-blue-400 tracking-wider uppercase mt-4 block">Step 04 &bull; Fine Finishing</span>
+                    <span class="text-[10px] font-bold text-purple-700 tracking-wider uppercase mt-4 block">Step 04 &bull; Fine Finishing</span>
                 </div>
             </div>
         </div>
@@ -322,18 +312,18 @@
         <div class="max-w-6xl mx-auto">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-12">
                 <div class="space-y-2">
-                    <span class="text-xs font-bold text-faludaRose-400 uppercase tracking-widest block">Handcrafted Treats</span>
-                    <h2 class="text-3xl md:text-4xl font-serif font-extrabold text-stone-100">Explore our Classic Menu</h2>
+                    <span class="text-xs font-bold text-faludaRose-600 uppercase tracking-widest block">Handcrafted Treats</span>
+                    <h2 class="text-3xl md:text-4xl font-serif font-extrabold text-stone-900">Explore our Classic Menu</h2>
                 </div>
                 
                 <!-- Category Filters -->
-                <div class="flex flex-wrap gap-2 mt-4 md:mt-0 bg-warmOnyx-800 p-1.5 rounded-2xl border border-stone-800 max-w-full overflow-x-auto">
+                <div class="flex flex-wrap gap-2 mt-4 md:mt-0 bg-rabriCream-200 p-1.5 rounded-2xl border border-amber-300/80 max-w-full overflow-x-auto shadow-sm">
                     <button onclick="filterMenu('all')" id="btn-all" class="menu-tab-btn active bg-faludaRose-600 text-white font-bold text-xs px-4 py-2 rounded-xl shadow-sm transition">All Items</button>
-                    <button onclick="filterMenu('faluda')" id="btn-faluda" class="menu-tab-btn text-stone-400 hover:text-stone-100 font-bold text-xs px-4 py-2 rounded-xl transition">Faludas</button>
-                    <button onclick="filterMenu('colddrinks')" id="btn-colddrinks" class="menu-tab-btn text-stone-400 hover:text-stone-100 font-bold text-xs px-4 py-2 rounded-xl transition">Cold Drinks</button>
-                    <button onclick="filterMenu('shakes')" id="btn-shakes" class="menu-tab-btn text-stone-400 hover:text-stone-100 font-bold text-xs px-4 py-2 rounded-xl transition">Shakes</button>
-                    <button onclick="filterMenu('lassi')" id="btn-lassi" class="menu-tab-btn text-stone-400 hover:text-stone-100 font-bold text-xs px-4 py-2 rounded-xl transition">Lassis</button>
-                    <button onclick="filterMenu('icecream')" id="btn-icecream" class="menu-tab-btn text-stone-400 hover:text-stone-100 font-bold text-xs px-4 py-2 rounded-xl transition">Ice Creams</button>
+                    <button onclick="filterMenu('faluda')" id="btn-faluda" class="menu-tab-btn text-stone-700 hover:text-stone-900 font-bold text-xs px-4 py-2 rounded-xl transition">Faludas</button>
+                    <button onclick="filterMenu('colddrinks')" id="btn-colddrinks" class="menu-tab-btn text-stone-700 hover:text-stone-900 font-bold text-xs px-4 py-2 rounded-xl transition">Cold Drinks</button>
+                    <button onclick="filterMenu('shakes')" id="btn-shakes" class="menu-tab-btn text-stone-700 hover:text-stone-900 font-bold text-xs px-4 py-2 rounded-xl transition">Shakes</button>
+                    <button onclick="filterMenu('lassi')" id="btn-lassi" class="menu-tab-btn text-stone-700 hover:text-stone-900 font-bold text-xs px-4 py-2 rounded-xl transition">Lassis</button>
+                    <button onclick="filterMenu('icecream')" id="btn-icecream" class="menu-tab-btn text-stone-700 hover:text-stone-900 font-bold text-xs px-4 py-2 rounded-xl transition">Ice Creams</button>
                 </div>
             </div>
 
@@ -346,106 +336,105 @@
 
     <!-- Cart Drawer panel -->
     <div id="cartDrawer" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-end">
-        <div class="bg-warmOnyx-900 h-full w-full max-w-md p-6 shadow-2xl flex flex-col border-l border-stone-800 relative text-stone-100">
-            <button onclick="toggleCart()" class="absolute top-5 right-5 text-stone-400 hover:text-stone-100 transition p-1 rounded-xl hover:bg-stone-800">
+        <div class="bg-rabriCream-50 h-full w-full max-w-md p-6 shadow-2xl flex flex-col border-l border-amber-200 relative text-stone-900">
+            <button onclick="toggleCart()" class="absolute top-5 right-5 text-stone-500 hover:text-stone-900 transition p-1 rounded-xl hover:bg-rabriCream-200">
                 <i data-lucide="x" class="w-6 h-6"></i>
             </button>
             
-            <div class="flex items-center space-x-2 pb-4 border-b border-stone-800 mb-6">
-                <i data-lucide="shopping-cart" class="w-6 h-6 text-faludaRose-500"></i>
-                <h3 class="text-lg font-extrabold text-stone-100 font-serif">Your Dessert Order</h3>
+            <div class="flex items-center space-x-2 pb-4 border-b border-amber-200 mb-6">
+                <i data-lucide="shopping-cart" class="w-6 h-6 text-faludaRose-600"></i>
+                <h3 class="text-lg font-extrabold text-stone-900 font-serif">Your Dessert Order</h3>
             </div>
 
             <!-- Cart list items -->
             <div id="cartList" class="flex-1 overflow-y-auto space-y-4 pr-1">
-                <div class="flex flex-col items-center justify-center text-center h-48 space-y-2 opacity-50">
+                <div class="flex flex-col items-center justify-center text-center h-48 space-y-2 opacity-60">
                     <i data-lucide="glass-water" class="w-10 h-10 text-stone-500"></i>
-                    <p class="text-sm text-stone-400 font-bold">Your cart is currently sweet-empty!</p>
+                    <p class="text-sm text-stone-700 font-bold">Your cart is currently sweet-empty!</p>
                     <p class="text-xs text-stone-500 max-w-xs">Explore the Menu specialties and load up on fresh Faludas, Shakes, or homemade Ice Creams.</p>
                 </div>
             </div>
 
             <!-- Cart Pricing summary footer -->
-            <div class="pt-6 border-t border-stone-800 space-y-4">
+            <div class="pt-6 border-t border-amber-200 space-y-4">
                 <div class="space-y-1.5 text-sm">
-                    <!-- Custom Sweetness Level Customizer -->
-                    <div>
-                        <label class="block text-xs font-bold text-stone-400 mb-1" for="sweetnessLevel">Choose Sweetness (Using Our Homemade Sweetener!):</label>
-                        <select id="sweetnessLevel" class="w-full bg-warmOnyx-800 border border-stone-700 text-stone-200 rounded-xl p-2.5 text-xs focus:outline-none focus:border-faludaRose-500 transition">
-                            <option value="Regular Sweet">Regular Sweet (Chef's Special Recommendation)</option>
-                            <option value="Extra Sweet">Extra Sweet (For Ultimate Sweet Tooth)</option>
-                            <option value="Low Sweet">Low Sweet (Light Sweetener Touch)</option>
-                            <option value="Sugar Free Base">Sugar Free Sweetener Base</option>
-                        </select>
-                    </div>
 
-                    <div class="flex justify-between text-stone-400">
+                    <div class="flex justify-between text-stone-600">
                         <span>Treat Subtotal</span>
                         <span id="subtotalPrice">₹0.00</span>
                     </div>
-                    <div class="flex justify-between text-stone-400">
+                    <div class="flex justify-between text-stone-600">
                         <span>SGST/CGST (Incl.)</span>
                         <span>₹0.00</span>
                     </div>
-                    <div class="flex justify-between font-extrabold text-stone-100 text-base pt-2 border-t border-stone-800">
+                    <div class="flex justify-between font-extrabold text-stone-900 text-base pt-2 border-t border-amber-200">
                         <span>Total Payable</span>
-                        <span id="totalPrice" class="text-faludaRose-400 font-serif">₹0.00</span>
+                        <span id="totalPrice" class="text-faludaRose-600 font-serif">₹0.00</span>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-3">
-                    <button onclick="placeMockOrder('Pickup')" class="bg-stone-800 hover:bg-stone-700 border border-stone-700 text-white font-bold py-3.5 rounded-xl transition text-xs text-center flex items-center justify-center gap-1.5">
-                        <i data-lucide="store" class="w-4 h-4 text-kesarGold-400"></i> Place Pickup
-                    </button>
-                    <button onclick="placeMockOrder('Home Delivery')" class="bg-faludaRose-600 hover:bg-faludaRose-500 text-white font-bold py-3.5 rounded-xl transition text-xs text-center flex items-center justify-center gap-1.5 shadow-md">
-                        <i data-lucide="send" class="w-4 h-4"></i> WhatsApp Order
-                    </button>
-                </div>
+                <a href="https://www.zomato.com/jamnagar/raj-faluda-center-jamnagar-locality/order" target="_blank" rel="noopener noreferrer" class="w-full bg-red-600 hover:bg-red-700 text-white font-extrabold py-3.5 rounded-xl transition text-sm text-center flex items-center justify-center gap-2 shadow-md">Order on Zomato ↗</a>
                 <p class="text-[10px] text-center text-stone-500 leading-normal">
-                    * Placing orders simulates a direct text dispatch to Raj Faluda Center.
+                    * Zomato orders are completed on Zomato. Items in this cart are not transferred automatically.
                 </p>
             </div>
         </div>
     </div>
 
     <!-- Contact & Store Locator -->
-    <section id="location" class="py-16 bg-warmOnyx-950 text-white px-4 lg:px-8 relative border-t border-stone-800">
+    <section id="location" class="py-16 bg-rabriCream-200/80 text-stone-900 px-4 lg:px-8 relative border-t border-amber-900/10">
         <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
             
             <!-- Details left -->
             <div class="space-y-6">
-                <span class="text-xs font-bold uppercase tracking-widest text-kesarGold-400 block">Freshness Hotspot</span>
-                <h2 class="text-3xl md:text-4xl font-serif font-extrabold leading-tight">Visit Raj Faluda Center</h2>
-                <div class="w-12 h-1 bg-faludaRose-500 rounded-full"></div>
-                <p class="text-stone-400 text-sm leading-relaxed">
+                <div class="space-y-2">
+                    <span class="text-xs font-bold uppercase tracking-widest text-amber-700 block">Freshness Hotspot &bull; Est. 1980s</span>
+                    <h2 class="text-3xl md:text-4xl font-serif font-extrabold leading-tight text-stone-900">Visit Raj Faluda Center</h2>
+                    <div class="w-12 h-1 bg-faludaRose-500 rounded-full"></div>
+                </div>
+
+                <!-- Single Branch Highlight Box -->
+                <div class="bg-amber-50 border-2 border-amber-400 p-4 rounded-2xl shadow-sm flex items-start space-x-3 text-stone-800">
+                    <div class="bg-amber-500 text-white p-2 rounded-xl shrink-0 shadow-md">
+                        <i data-lucide="alert-circle" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <strong class="text-stone-900 font-serif font-bold text-sm block">Important Customer Notice</strong>
+                        <p class="text-xs text-stone-700 leading-relaxed font-medium mt-0.5">
+                            We have <strong>NO OTHER BRANCHES</strong> anywhere else. This Chandi Bazar Road location in Jamnagar is our <strong>one and only original shop</strong> serving you since the 1980s.
+                        </p>
+                    </div>
+                </div>
+
+                <p class="text-stone-700 text-sm leading-relaxed">
                     Come down and smell the aroma of slowly boiling fresh dairy, handpicked roses, and cardamom spices. Watch our artisans prepare your customized, towering Faludas from scratch!
                 </p>
 
-                <div class="space-y-4 text-sm text-stone-300">
+                <div class="space-y-4 text-sm text-stone-800">
                     <div class="flex items-start space-x-3.5">
-                        <div class="bg-warmOnyx-800 border border-stone-800 text-faludaRose-400 p-2 rounded-xl shrink-0">
+                        <div class="bg-white border border-amber-300 text-faludaRose-600 p-2 rounded-xl shrink-0 shadow-sm">
                             <i data-lucide="map-pin" class="w-5 h-5"></i>
                         </div>
                         <div>
-                            <strong class="text-white block font-medium">Flagship Store Location</strong>
-                            <span>Chandi Bazar Road, Central Bank Road, Jalani Jar, Jamnagar, Gujarat - 361001</span>
+                            <strong class="text-stone-900 block font-medium">Flagship Store Location</strong>
+                            <span>Chandi Bazar Road, Central Bank Road, Jalani Jar, Kadiawad, Jamnagar, Gujarat - 361006</span>
                         </div>
                     </div>
                     <div class="flex items-start space-x-3.5">
-                        <div class="bg-warmOnyx-800 border border-stone-800 text-kesarGold-400 p-2 rounded-xl shrink-0">
+                        <div class="bg-white border border-amber-300 text-amber-600 p-2 rounded-xl shrink-0 shadow-sm">
                             <i data-lucide="clock" class="w-5 h-5"></i>
                         </div>
                         <div>
-                            <strong class="text-white block font-medium">Opening Hours</strong>
+                            <strong class="text-stone-900 block font-medium">Opening Hours</strong>
                             <span>Everyday: 10:00 AM - 10:30 PM (No breaks)</span>
                         </div>
                     </div>
                     <div class="flex items-start space-x-3.5">
-                        <div class="bg-warmOnyx-800 border border-stone-800 text-emerald-400 p-2 rounded-xl shrink-0">
+                        <div class="bg-white border border-amber-300 text-emerald-600 p-2 rounded-xl shrink-0 shadow-sm">
                             <i data-lucide="phone" class="w-5 h-5"></i>
                         </div>
                         <div>
-                            <strong class="text-white block font-medium">Contact Hotline</strong>
+                            <strong class="text-stone-900 block font-medium">Contact Hotline</strong>
                             <span>+91 91575 35353</span>
                         </div>
                     </div>
@@ -453,41 +442,57 @@
             </div>
 
             <!-- Visual Store Map -->
-            <div class="bg-warmOnyx-900 p-6 rounded-3xl border border-stone-800 shadow-xl space-y-4">
-                <div class="h-56 w-full bg-warmOnyx-950 rounded-2xl relative overflow-hidden flex items-center justify-center border border-stone-800">
-                    <div class="absolute inset-0 opacity-30 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+            <div class="bg-white p-6 rounded-3xl border border-amber-200 shadow-lg space-y-4">
+                <div class="h-56 w-full bg-rabriCream-100 rounded-2xl relative overflow-hidden flex items-center justify-center border border-amber-200">
+                    <div class="absolute inset-0 opacity-30 bg-[radial-gradient(#b4833e_1px,transparent_1px)] [background-size:16px_16px]"></div>
                     <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
                         <div class="bg-faludaRose-600 text-white p-3.5 rounded-2xl shadow-xl shadow-faludaRose-600/30 animate-bounce">
                             <i data-lucide="store" class="w-6 h-6"></i>
                         </div>
-                        <span class="bg-warmOnyx-900 border border-stone-700 text-white text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider mt-2 shadow shadow-black">Raj Faluda Center</span>
+                        <span class="bg-white border border-amber-300 text-stone-900 text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider mt-2 shadow-md">Raj Faluda Center (Original)</span>
                     </div>
-                    <span class="absolute bottom-3 left-3 text-[10px] text-stone-500 font-mono">Map Coordinates: 22.4707° N, 70.0577° E</span>
+                    <span class="absolute bottom-3 left-3 text-[10px] text-stone-600 font-mono">Chandi Bazar Road, Jamnagar</span>
                 </div>
+
+                <a href="https://maps.google.com/?cid=8853013804118749906" target="_blank" rel="noopener noreferrer" class="w-full bg-faludaRose-600 hover:bg-faludaRose-500 text-white font-bold py-3 px-4 rounded-2xl transition text-xs flex items-center justify-center gap-2 shadow-md">
+                    <i data-lucide="map" class="w-4 h-4"></i>
+                    <span>Open in Google Maps</span>
+                </a>
                 
-                <div class="flex items-center justify-between text-xs text-stone-400 border-t border-stone-800 pt-4">
+                <div class="flex items-center justify-between text-xs text-stone-600 border-t border-amber-100 pt-4">
                     <span>Questions or bulk corporate event orders?</span>
-                    <a href="mailto:contact@rajfaluda.com" class="text-kesarGold-400 font-bold hover:underline">Email Support</a>
+                    <a href="mailto:contact@rajfaluda.com" class="text-amber-700 font-bold hover:underline">Email Support</a>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- Google Reviews Call to Action -->
+    <section aria-label="Customer reviews" class="bg-white border-t border-amber-200 px-4 py-10 text-center">
+        <div class="max-w-3xl mx-auto space-y-3">
+            <h2 class="text-2xl md:text-3xl font-serif font-extrabold text-stone-900">Enjoyed your visit?</h2>
+            <p class="text-stone-600 text-sm md:text-base">Your feedback helps Raj Faluda Center grow. Share your experience with a Google review!</p>
+            <a href="https://share.google/L9ayRYsY9BuMGLuv7" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 bg-faludaRose-600 hover:bg-faludaRose-500 text-white font-extrabold px-7 py-3.5 rounded-2xl shadow-md transition">⭐ Leave Us a Review ↗</a>
+        </div>
+    </section>
+
     <!-- Footer -->
-    <footer class="bg-warmOnyx-950 text-stone-500 py-12 px-4 lg:px-8 border-t border-stone-800/80 text-center text-xs space-y-4">
+    <footer class="bg-rabriCream-300/80 text-stone-600 py-12 px-4 lg:px-8 border-t border-amber-300/60 text-center text-xs space-y-4">
         <div class="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
-            <span class="font-serif text-sm font-bold text-stone-400 tracking-wider">© 2026 RAJ FALUDA CENTER. ALL RIGHTS RESERVED.</span>
-            <div class="flex space-x-6 text-stone-400">
-                <a href="#menu" class="hover:text-faludaRose-400 transition-colors">Our Specialties</a>
-                <a href="#story" class="hover:text-faludaRose-400 transition-colors">Homemade Story</a>
-                <a href="#location" class="hover:text-faludaRose-400 transition-colors">Find Us</a>
+            <span class="font-serif text-sm font-bold text-stone-800 tracking-wider">© 2020 RAJ FALUDA CENTER. ALL RIGHTS RESERVED.</span>
+            <div class="flex space-x-6 text-stone-700">
+                <a href="#menu" class="hover:text-faludaRose-600 transition-colors">Our Specialties</a>
+                <a href="#story" class="hover:text-faludaRose-600 transition-colors">Homemade Story</a>
+                <a href="#location" class="hover:text-faludaRose-600 transition-colors">Find Us</a>
             </div>
         </div>
-        <p class="text-stone-600">All of our signature treats are prepared with 100% pure vegetarian ingredients, filtered water, and organic milk bases under continuous quality audits.</p>
+        <p class="text-stone-600 max-w-3xl mx-auto">
+            Serving handcrafted faludas, shakes, lassis & ice creams since the 1980s. <strong>Raj Faluda Center has no other branches.</strong> All treats are prepared with 100% pure vegetarian ingredients and organic milk bases.
+        </p>
     </footer>
 
     <!-- App Dynamic Notification Toast -->
-    <div id="appToast" class="fixed bottom-6 left-6 z-50 bg-warmOnyx-800 text-amber-50 border border-stone-700 px-4 py-3 rounded-2xl shadow-2xl flex items-center space-x-3 translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
+    <div id="appToast" class="fixed bottom-6 left-6 z-50 bg-stone-900 text-amber-50 border border-stone-800 px-4 py-3 rounded-2xl shadow-2xl flex items-center space-x-3 translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
         <div class="bg-faludaRose-600 text-white p-1.5 rounded-xl">
             <i data-lucide="check" class="w-4 h-4"></i>
         </div>
@@ -500,57 +505,57 @@
     <script>
         const baseMenuItems = [
             // FALUDAS
-            { id: "faluda-1", name: "Rose Faluda", category: "faluda", price: 110, description: "Classic rose syrup base with house-made rose ice cream, vermicelli, and basil seeds.", label: "Classic Favorite", theme: "bg-rose-100/90 border-rose-300 text-rose-950", icon: "sparkles" },
-            { id: "faluda-2", name: "Kesar Pista Faluda", category: "faluda", price: 130, description: "Infused with pure Iranian saffron, cardamom milk, pistachios, and kesar ice cream.", label: "Bestseller", theme: "bg-emerald-100/90 border-emerald-300 text-emerald-950", icon: "crown" },
-            { id: "faluda-3", name: "Sp. Shahi Gulaab Faluda", category: "faluda", price: 150, description: "Rich royal rose blend loaded with dry fruits, house rabdi, and double rose scoops.", label: "Chef's Special", theme: "bg-pink-100/90 border-pink-300 text-pink-950", icon: "heart" },
-            { id: "faluda-4", name: "Sp. Kesar Dryfruit Faluda", category: "faluda", price: 160, description: "Deluxe saffron faluda loaded with roasted cashews, almonds, pistachios, and saffron ice cream.", label: "Premium Choice", theme: "bg-amber-200/80 border-amber-300 text-amber-950", icon: "sparkles" },
-            { id: "faluda-5", name: "Black Currant Faluda", category: "faluda", price: 130, description: "Tangy & sweet black currant syrup with house-churned black currant ice cream.", label: "Berry Delight", theme: "bg-purple-100/90 border-purple-300 text-purple-950", icon: "sparkles" },
-            { id: "faluda-6", name: "Chocolate Faluda", category: "faluda", price: 130, description: "Velvety dark chocolate syrup, chocolate chips, and rich house chocolate ice cream.", label: "Rich Cocoa", theme: "bg-amber-200/80 border-amber-300 text-amber-950", icon: "cookie" },
-            { id: "faluda-7", name: "Butterscotch Faluda", category: "faluda", price: 130, description: "Crunchy butterscotch praline with house-churned butterscotch ice cream.", label: "Crunchy Treat", theme: "bg-yellow-100/90 border-yellow-300 text-yellow-950", icon: "sparkles" },
-            { id: "faluda-8", name: "Mango Faluda", category: "faluda", price: 140, description: "Seasonal fresh Alphonso mango pulp mixed with thick milk and mango ice cream. (Served & made only in season when fresh fruit is available).", label: "Seasonal Special", theme: "bg-orange-100/90 border-orange-300 text-orange-950", icon: "sun" },
-            { id: "faluda-9", name: "Sitaphal Faluda", category: "faluda", price: 150, description: "Seasonal fresh custard apple pulp layered with cream and sitaphal ice cream. (Served & made only in season when fresh fruit is available).", label: "Seasonal Special", theme: "bg-teal-100/90 border-teal-300 text-teal-950", icon: "sparkles" },
+            { id: "faluda-1", name: "Rose Faluda", category: "faluda", price: 110, description: "Classic rose syrup base with house-made rose ice cream, vermicelli, and basil seeds.", label: "Classic Favorite", theme: "bg-gradient-to-br from-rose-200 to-pink-300 border-rose-300 text-rose-950", icon: "sparkles" },
+            { id: "faluda-2", name: "Kesar Pista Faluda", category: "faluda", price: 130, description: "Infused with pure Iranian saffron, cardamom milk, pistachios, and kesar ice cream.", label: "Bestseller", theme: "bg-gradient-to-br from-emerald-200 to-teal-300 border-emerald-300 text-emerald-950", icon: "crown" },
+            { id: "faluda-3", name: "Sp. Shahi Gulaab Faluda", category: "faluda", price: 150, description: "Rich royal rose blend loaded with dry fruits, house rabdi, and double rose scoops.", label: "Chef's Special", theme: "bg-gradient-to-br from-pink-200 to-rose-300 border-pink-300 text-pink-950", icon: "heart" },
+            { id: "faluda-4", name: "Sp. Kesar Dryfruit Faluda", category: "faluda", price: 160, description: "Deluxe saffron faluda loaded with roasted cashews, almonds, pistachios, and saffron ice cream.", label: "Premium Choice", theme: "bg-gradient-to-br from-amber-200 to-yellow-300 border-amber-400 text-amber-950", icon: "sparkles" },
+            { id: "faluda-5", name: "Black Currant Faluda", category: "faluda", price: 130, description: "Tangy & sweet black currant syrup with house-churned black currant ice cream.", label: "Berry Delight", theme: "bg-gradient-to-br from-purple-200 to-indigo-300 border-purple-300 text-purple-950", icon: "sparkles" },
+            { id: "faluda-6", name: "Chocolate Faluda", category: "faluda", price: 130, description: "Velvety dark chocolate syrup, chocolate chips, and rich house chocolate ice cream.", label: "Rich Cocoa", theme: "bg-gradient-to-br from-amber-200 to-stone-300 border-amber-400 text-amber-950", icon: "cookie" },
+            { id: "faluda-7", name: "Butterscotch Faluda", category: "faluda", price: 130, description: "Crunchy butterscotch praline with house-churned butterscotch ice cream.", label: "Crunchy Treat", theme: "bg-gradient-to-br from-yellow-200 to-amber-300 border-yellow-400 text-yellow-950", icon: "sparkles" },
+            { id: "faluda-8", name: "Mango Faluda", category: "faluda", price: 140, description: "Seasonal fresh Alphonso mango pulp mixed with thick milk and mango ice cream. (Served & made only in season when fresh fruit is available).", label: "Seasonal Special", theme: "bg-gradient-to-br from-orange-200 to-amber-300 border-orange-300 text-orange-950", icon: "sun" },
+            { id: "faluda-9", name: "Sitaphal Faluda", category: "faluda", price: 150, description: "Seasonal fresh custard apple pulp layered with cream and sitaphal ice cream. (Served & made only in season when fresh fruit is available).", label: "Seasonal Special", theme: "bg-gradient-to-br from-teal-200 to-emerald-300 border-teal-300 text-teal-950", icon: "sparkles" },
 
             // DOODH COLD DRINKS
-            { id: "drink-1", name: "Rose Doodh Cold Drink", category: "colddrinks", price: 60, description: "Chilled slow-boiled milk flavored with our signature house rose syrup.", label: "Cool & Refreshing", theme: "bg-rose-100/90 border-rose-300 text-rose-950", icon: "cup-soda" },
-            { id: "drink-2", name: "Chocolate Doodh Cold Drink", category: "colddrinks", price: 65, description: "Chilled thick milk with smooth cocoa chocolate syrup base.", label: "Classic Choco", theme: "bg-amber-200/80 border-amber-300 text-amber-950", icon: "cup-soda" },
-            { id: "drink-3", name: "Butterscotch Doodh Cold Drink", category: "colddrinks", price: 65, description: "Chilled sweetened milk infused with rich butterscotch flavor.", label: "Sweet Sip", theme: "bg-yellow-100/90 border-yellow-300 text-yellow-950", icon: "cup-soda" },
-            { id: "drink-4", name: "Blackcurrent Doodh Cold Drink", category: "colddrinks", price: 65, description: "Cold thick milk infused with fruity black currant sweet flavor.", label: "Berry Twist", theme: "bg-purple-100/90 border-purple-300 text-purple-950", icon: "cup-soda" },
-            { id: "drink-5", name: "Strawberry Doodh Cold Drink", category: "colddrinks", price: 65, description: "Chilled milk infused with sweet strawberry flavor and sabja seeds.", label: "Fruity Refresh", theme: "bg-pink-100/90 border-pink-300 text-pink-950", icon: "cup-soda" },
-            { id: "drink-6", name: "Kesar Pista Doodh Cold Drink", category: "colddrinks", price: 75, description: "Chilled saffron and pistachio infused sweetened milk.", label: "Royal Drink", theme: "bg-emerald-100/90 border-emerald-300 text-emerald-950", icon: "crown" },
-            { id: "drink-7", name: "Shahi Gulab Doodh Cold Drink", category: "colddrinks", price: 75, description: "Royal rose flavored chilled milk blended with dry fruit bits.", label: "Special Blend", theme: "bg-rose-200/80 border-rose-300 text-rose-950", icon: "heart" },
-            { id: "drink-8", name: "Sp. Kesar Dryfruit Doodh Cold Drink", category: "colddrinks", price: 85, description: "Chilled saffron milk loaded with chopped cashews, almonds, and pistachios.", label: "House Special", theme: "bg-amber-200/80 border-amber-300 text-amber-950", icon: "sparkles" },
-            { id: "drink-9", name: "Sp. Sitaphal Doodh Cold Drink", category: "colddrinks", price: 85, description: "Fresh seasonal sitaphal pulp mixed into rich chilled milk.", label: "Seasonal", theme: "bg-teal-100/90 border-teal-300 text-teal-950", icon: "sparkles" },
-            { id: "drink-10", name: "Sp. Choco Strawberry Doodh Cold Drink", category: "colddrinks", price: 85, description: "Dual-layer chilled milk combining rich chocolate and strawberry syrup.", label: "Dual Delight", theme: "bg-pink-100/90 border-pink-300 text-stone-900", icon: "sparkles" },
+            { id: "drink-1", name: "Rose Doodh Cold Drink", category: "colddrinks", price: 60, description: "Chilled slow-boiled milk flavored with our signature house rose syrup.", label: "Cool & Refreshing", theme: "bg-gradient-to-br from-rose-200 to-pink-300 border-rose-300 text-rose-950", icon: "cup-soda" },
+            { id: "drink-2", name: "Chocolate Doodh Cold Drink", category: "colddrinks", price: 65, description: "Chilled thick milk with smooth cocoa chocolate syrup base.", label: "Classic Choco", theme: "bg-gradient-to-br from-amber-200 to-stone-300 border-amber-400 text-amber-950", icon: "cup-soda" },
+            { id: "drink-3", name: "Butterscotch Doodh Cold Drink", category: "colddrinks", price: 65, description: "Chilled sweetened milk infused with rich butterscotch flavor.", label: "Sweet Sip", theme: "bg-gradient-to-br from-yellow-200 to-amber-300 border-yellow-400 text-yellow-950", icon: "cup-soda" },
+            { id: "drink-4", name: "Blackcurrent Doodh Cold Drink", category: "colddrinks", price: 65, description: "Cold thick milk infused with fruity black currant sweet flavor.", label: "Berry Twist", theme: "bg-gradient-to-br from-purple-200 to-indigo-300 border-purple-300 text-purple-950", icon: "cup-soda" },
+            { id: "drink-5", name: "Strawberry Doodh Cold Drink", category: "colddrinks", price: 65, description: "Chilled milk infused with sweet strawberry flavor and sabja seeds.", label: "Fruity Refresh", theme: "bg-gradient-to-br from-pink-200 to-rose-300 border-pink-300 text-pink-950", icon: "cup-soda" },
+            { id: "drink-6", name: "Kesar Pista Doodh Cold Drink", category: "colddrinks", price: 75, description: "Chilled saffron and pistachio infused sweetened milk.", label: "Royal Drink", theme: "bg-gradient-to-br from-emerald-200 to-teal-300 border-emerald-300 text-emerald-950", icon: "crown" },
+            { id: "drink-7", name: "Shahi Gulab Doodh Cold Drink", category: "colddrinks", price: 75, description: "Royal rose flavored chilled milk blended with dry fruit bits.", label: "Special Blend", theme: "bg-gradient-to-br from-pink-200 to-rose-300 border-pink-300 text-rose-950", icon: "heart" },
+            { id: "drink-8", name: "Sp. Kesar Dryfruit Doodh Cold Drink", category: "colddrinks", price: 85, description: "Chilled saffron milk loaded with chopped cashews, almonds, and pistachios.", label: "House Special", theme: "bg-gradient-to-br from-amber-200 to-yellow-300 border-amber-400 text-amber-950", icon: "sparkles" },
+            { id: "drink-9", name: "Sp. Sitaphal Doodh Cold Drink", category: "colddrinks", price: 85, description: "Fresh seasonal sitaphal pulp mixed into rich chilled milk.", label: "Seasonal", theme: "bg-gradient-to-br from-teal-200 to-emerald-300 border-teal-300 text-teal-950", icon: "sparkles" },
+            { id: "drink-10", name: "Sp. Choco Strawberry Doodh Cold Drink", category: "colddrinks", price: 85, description: "Dual-layer chilled milk combining rich chocolate and strawberry syrup.", label: "Dual Delight", theme: "bg-gradient-to-br from-pink-200 to-amber-200 border-pink-300 text-stone-900", icon: "sparkles" },
 
             // MILKSHAKES
-            { id: "shake-1", name: "Cold Cocoa", category: "shakes", price: 90, description: "Thick, silky dark chocolate milk served ice-cold with chocochips.", label: "All-Time Classic", theme: "bg-amber-200/80 border-amber-300 text-amber-950", icon: "coffee" },
-            { id: "shake-2", name: "Badam Milkshake", category: "shakes", price: 100, description: "Rich almond milk blended with cardamom, saffron, and crushed California almonds.", label: "Nourishing", theme: "bg-amber-100/90 border-amber-300 text-amber-950", icon: "crown" },
-            { id: "shake-3", name: "Kitkat Shake", category: "shakes", price: 120, description: "Crushed Kitkat wafers blended with thick milk and topped with crisp chocolate crunch.", label: "Trendy Choice", theme: "bg-red-100/90 border-red-300 text-red-950", icon: "cookie" },
-            { id: "shake-4", name: "Oreo Shake", category: "shakes", price: 110, description: "Crunchy Oreo cookies whipped with cream and cold full-fat milk.", label: "Kids' Favorite", theme: "bg-stone-200 border-stone-300 text-stone-900", icon: "cookie" },
-            { id: "shake-5", name: "Mango Milkshake", category: "shakes", price: 130, description: "Fresh Alphonso mango pulp blended into thick, slow-boiled sweetened milk. (Served & made only in season when fresh fruit is available).", label: "Seasonal Special", theme: "bg-orange-100/90 border-orange-300 text-orange-950", icon: "sun" },
-            { id: "shake-6", name: "Sitaphal Milkshake", category: "shakes", price: 130, description: "Real custard apple pulp blended into thick, slow-boiled sweetened milk. (Served & made only in season when fresh fruit is available).", label: "Seasonal Fruit", theme: "bg-teal-100/90 border-teal-300 text-teal-950", icon: "sparkles" },
-            { id: "shake-7", name: "Cold Coffee", category: "shakes", price: 90, description: "Frothy whipped coffee blend with chilled thick milk and cocoa dusting.", label: "Energy Boost", theme: "bg-amber-200/80 border-amber-300 text-amber-950", icon: "coffee" },
-            { id: "shake-8", name: "Dairymilk Milkshake", category: "shakes", price: 120, description: "Smooth blend featuring melted Dairy Milk chocolate and cold cream milk.", label: "Choco Delight", theme: "bg-purple-200/80 border-purple-300 text-purple-950", icon: "cookie" },
+            { id: "shake-1", name: "Cold Cocoa", category: "shakes", price: 90, description: "Thick, silky dark chocolate milk served ice-cold with chocochips.", label: "All-Time Classic", theme: "bg-gradient-to-br from-amber-200 to-stone-300 border-amber-400 text-amber-950", icon: "coffee" },
+            { id: "shake-2", name: "Badam Milkshake", category: "shakes", price: 100, description: "Rich almond milk blended with cardamom, saffron, and crushed California almonds.", label: "Nourishing", theme: "bg-gradient-to-br from-amber-200 to-yellow-200 border-amber-300 text-amber-950", icon: "crown" },
+            { id: "shake-3", name: "Kitkat Shake", category: "shakes", price: 120, description: "Crushed Kitkat wafers blended with thick milk and topped with crisp chocolate crunch.", label: "Trendy Choice", theme: "bg-gradient-to-br from-red-200 to-rose-300 border-red-300 text-red-950", icon: "cookie" },
+            { id: "shake-4", name: "Oreo Shake", category: "shakes", price: 110, description: "Crunchy Oreo cookies whipped with cream and cold full-fat milk.", label: "Kids' Favorite", theme: "bg-gradient-to-br from-stone-300 to-amber-200 border-stone-400 text-stone-900", icon: "cookie" },
+            { id: "shake-5", name: "Mango Milkshake", category: "shakes", price: 130, description: "Fresh Alphonso mango pulp blended into thick, slow-boiled sweetened milk. (Served & made only in season when fresh fruit is available).", label: "Seasonal Special", theme: "bg-gradient-to-br from-orange-200 to-amber-300 border-orange-300 text-orange-950", icon: "sun" },
+            { id: "shake-6", name: "Sitaphal Milkshake", category: "shakes", price: 130, description: "Real custard apple pulp blended into thick, slow-boiled sweetened milk. (Served & made only in season when fresh fruit is available).", label: "Seasonal Fruit", theme: "bg-gradient-to-br from-teal-200 to-emerald-300 border-teal-300 text-teal-950", icon: "sparkles" },
+            { id: "shake-7", name: "Cold Coffee", category: "shakes", price: 90, description: "Frothy whipped coffee blend with chilled thick milk and cocoa dusting.", label: "Energy Boost", theme: "bg-gradient-to-br from-amber-200 to-stone-300 border-amber-400 text-amber-950", icon: "coffee" },
+            { id: "shake-8", name: "Dairymilk Milkshake", category: "shakes", price: 120, description: "Smooth blend featuring melted Dairy Milk chocolate and cold cream milk.", label: "Choco Delight", theme: "bg-gradient-to-br from-purple-200 to-purple-300 border-purple-300 text-purple-950", icon: "cookie" },
 
             // LASSIS
-            { id: "lassi-1", name: "Rose Lassi", category: "lassi", price: 80, description: "Thick, creamy churned curd sweetened with house rose syrup and malai topping.", label: "Refreshing", theme: "bg-rose-100/90 border-rose-300 text-rose-950", icon: "glass-water" },
-            { id: "lassi-2", name: "Kesar Pista Lassi", category: "lassi", price: 90, description: "Thick curd churned with aromatic saffron milk and topped with crushed pistachios.", label: "Rich & Creamy", theme: "bg-emerald-100/90 border-emerald-300 text-emerald-950", icon: "crown" },
-            { id: "lassi-3", name: "Chocolate Lassi", category: "lassi", price: 90, description: "Creamy curd blended with rich chocolate cocoa and topped with chocolate shavings.", label: "Choco Twist", theme: "bg-amber-200/80 border-amber-300 text-amber-950", icon: "cookie" },
-            { id: "lassi-4", name: "Pineapple Lassi", category: "lassi", price: 85, description: "Sweet and vibrant tropical pineapple syrup blended into thick rich yogurt.", label: "Fruity Favorite", theme: "bg-yellow-100/90 border-yellow-300 text-yellow-950", icon: "sun" },
-            { id: "lassi-5", name: "Blackcurrent Lassi", category: "lassi", price: 90, description: "Berry-rich black currant flavor blended into smooth churned curd.", label: "Exotic Berry", theme: "bg-purple-100/90 border-purple-300 text-purple-950", icon: "sparkles" },
-            { id: "lassi-6", name: "Butterscotch Lassi", category: "lassi", price: 90, description: "Sweet butterscotch praline taste infused into thick churned malai lassi.", label: "Smooth & Sweet", theme: "bg-amber-100/90 border-amber-300 text-amber-950", icon: "sparkles" },
-            { id: "lassi-7", name: "Mango Lassi", category: "lassi", price: 95, description: "Fresh Alphonso mango pulp blended with rich thick curd and topped with malai. (Served & made only in season when fresh fruit is available).", label: "Seasonal Best", theme: "bg-orange-100/90 border-orange-300 text-orange-950", icon: "sun" },
+            { id: "lassi-1", name: "Rose Lassi", category: "lassi", price: 80, description: "Thick, creamy churned curd sweetened with house rose syrup and malai topping.", label: "Refreshing", theme: "bg-gradient-to-br from-rose-200 to-pink-300 border-rose-300 text-rose-950", icon: "glass-water" },
+            { id: "lassi-2", name: "Kesar Pista Lassi", category: "lassi", price: 90, description: "Thick curd churned with aromatic saffron milk and topped with crushed pistachios.", label: "Rich & Creamy", theme: "bg-gradient-to-br from-emerald-200 to-teal-300 border-emerald-300 text-emerald-950", icon: "crown" },
+            { id: "lassi-3", name: "Chocolate Lassi", category: "lassi", price: 90, description: "Creamy curd blended with rich chocolate cocoa and topped with chocolate shavings.", label: "Choco Twist", theme: "bg-gradient-to-br from-amber-200 to-stone-300 border-amber-400 text-amber-950", icon: "cookie" },
+            { id: "lassi-4", name: "Pineapple Lassi", category: "lassi", price: 85, description: "Sweet and vibrant tropical pineapple syrup blended into thick rich yogurt.", label: "Fruity Favorite", theme: "bg-gradient-to-br from-yellow-200 to-amber-300 border-yellow-300 text-yellow-950", icon: "sun" },
+            { id: "lassi-5", name: "Blackcurrent Lassi", category: "lassi", price: 90, description: "Berry-rich black currant flavor blended into smooth churned curd.", label: "Exotic Berry", theme: "bg-gradient-to-br from-purple-200 to-indigo-300 border-purple-300 text-purple-950", icon: "sparkles" },
+            { id: "lassi-6", name: "Butterscotch Lassi", category: "lassi", price: 90, description: "Sweet butterscotch praline taste infused into thick churned malai lassi.", label: "Smooth & Sweet", theme: "bg-gradient-to-br from-yellow-200 to-amber-300 border-yellow-300 text-yellow-950", icon: "sparkles" },
+            { id: "lassi-7", name: "Mango Lassi", category: "lassi", price: 95, description: "Fresh Alphonso mango pulp blended with rich thick curd and topped with malai. (Served & made only in season when fresh fruit is available).", label: "Seasonal Best", theme: "bg-gradient-to-br from-orange-200 to-amber-300 border-orange-300 text-orange-950", icon: "sun" },
 
             // ICE CREAM
-            { id: "ice-1", name: "Rose Ice Cream", category: "icecream", price: 70, description: "House-churned organic rose ice cream made with pure milk and rose extract.", label: "House Special", theme: "bg-rose-100/90 border-rose-300 text-rose-950", icon: "scoop" },
-            { id: "ice-2", name: "Kesar Pista Ice Cream", category: "icecream", price: 80, description: "Rich saffron ice cream packed with freshly ground pistachio nuts.", label: "Royal Scoop", theme: "bg-emerald-100/90 border-emerald-300 text-emerald-950", icon: "scoop" },
-            { id: "ice-3", name: "Sp. Shahi Gulaab Ice Cream", category: "icecream", price: 90, description: "Premium rose ice cream embedded with dried rose petals and cashew nut bits.", label: "Chef's Delight", theme: "bg-pink-100/90 border-pink-300 text-pink-950", icon: "scoop" },
-            { id: "ice-4", name: "Sp. Kesar Dryfruit Ice Cream", category: "icecream", price: 100, description: "Dense saffron ice cream loaded with almonds, cashews, and pistachios.", label: "Dryfruit Deluxe", theme: "bg-amber-200/80 border-amber-300 text-amber-950", icon: "scoop" },
-            { id: "ice-5", name: "Black Currant Ice Cream", category: "icecream", price: 80, description: "Creamy black currant ice cream studded with real black currant berries.", label: "Exotic Berry", theme: "bg-purple-100/90 border-purple-300 text-purple-950", icon: "scoop" },
-            { id: "ice-6", name: "Chocolate Ice Cream", category: "icecream", price: 80, description: "Rich, dense chocolate churned ice cream made with high quality cocoa.", label: "Rich Cocoa", theme: "bg-amber-200/80 border-amber-300 text-amber-950", icon: "scoop" },
-            { id: "ice-7", name: "Butterscotch Ice Cream", category: "icecream", price: 80, description: "Creamy butterscotch ice cream filled with sweet crunchy praline nuggets.", label: "Crunchy Scoop", theme: "bg-yellow-100/90 border-yellow-300 text-yellow-950", icon: "scoop" },
-            { id: "ice-8", name: "Mango Ice Cream", category: "icecream", price: 85, description: "Fresh seasonal Alphonso mango pulp churned into smooth rich ice cream. (Served & made only in season when fresh fruit is available).", label: "Seasonal Best", theme: "bg-orange-100/90 border-orange-300 text-orange-950", icon: "scoop" },
-            { id: "ice-9", name: "Sitaphal Ice Cream", category: "icecream", price: 90, description: "Authentic custard apple ice cream churned with natural fruit pulp. (Served & made only in season when fresh fruit is available).", label: "Seasonal Scoop", theme: "bg-teal-100/90 border-teal-300 text-teal-950", icon: "scoop" }
+            { id: "ice-1", name: "Rose Ice Cream", category: "icecream", price: 70, description: "House-churned organic rose ice cream made with pure milk and rose extract.", label: "House Special", theme: "bg-gradient-to-br from-rose-200 to-pink-300 border-rose-300 text-rose-950", icon: "scoop" },
+            { id: "ice-2", name: "Kesar Pista Ice Cream", category: "icecream", price: 80, description: "Rich saffron ice cream packed with freshly ground pistachio nuts.", label: "Royal Scoop", theme: "bg-gradient-to-br from-emerald-200 to-teal-300 border-emerald-300 text-emerald-950", icon: "scoop" },
+            { id: "ice-3", name: "Sp. Shahi Gulaab Ice Cream", category: "icecream", price: 90, description: "Premium rose ice cream embedded with dried rose petals and cashew nut bits.", label: "Chef's Delight", theme: "bg-gradient-to-br from-pink-200 to-rose-300 border-pink-300 text-pink-950", icon: "scoop" },
+            { id: "ice-4", name: "Sp. Kesar Dryfruit Ice Cream", category: "icecream", price: 100, description: "Dense saffron ice cream loaded with almonds, cashews, and pistachios.", label: "Dryfruit Deluxe", theme: "bg-gradient-to-br from-amber-200 to-yellow-300 border-amber-400 text-amber-950", icon: "scoop" },
+            { id: "ice-5", name: "Black Currant Ice Cream", category: "icecream", price: 80, description: "Creamy black currant ice cream studded with real black currant berries.", label: "Exotic Berry", theme: "bg-gradient-to-br from-purple-200 to-indigo-300 border-purple-300 text-purple-950", icon: "scoop" },
+            { id: "ice-6", name: "Chocolate Ice Cream", category: "icecream", price: 80, description: "Rich, dense chocolate churned ice cream made with high quality cocoa.", label: "Rich Cocoa", theme: "bg-gradient-to-br from-amber-200 to-stone-300 border-amber-400 text-amber-950", icon: "scoop" },
+            { id: "ice-7", name: "Butterscotch Ice Cream", category: "icecream", price: 80, description: "Creamy butterscotch ice cream filled with sweet crunchy praline nuggets.", label: "Crunchy Scoop", theme: "bg-gradient-to-br from-yellow-200 to-amber-300 border-yellow-300 text-yellow-950", icon: "scoop" },
+            { id: "ice-8", name: "Mango Ice Cream", category: "icecream", price: 85, description: "Fresh seasonal Alphonso mango pulp churned into smooth rich ice cream. (Served & made only in season when fresh fruit is available).", label: "Seasonal Best", theme: "bg-gradient-to-br from-orange-200 to-amber-300 border-orange-300 text-orange-950", icon: "scoop" },
+            { id: "ice-9", name: "Sitaphal Ice Cream", category: "icecream", price: 90, description: "Authentic custard apple ice cream churned with natural fruit pulp. (Served & made only in season when fresh fruit is available).", label: "Seasonal Scoop", theme: "bg-gradient-to-br from-teal-200 to-emerald-300 border-teal-300 text-teal-950", icon: "scoop" }
         ];
 
         // Category Metadata for Organised Sections
@@ -617,18 +622,18 @@
                 const items = menuItems.filter(item => item.category === catKey);
                 if (items.length === 0) return;
 
-                // Create Section Block with high-contrast header card on Warm Onyx
+                // Create Section Block with high-contrast header card on Rabri Cream
                 const sectionHtml = `
-                    <div class="bg-warmOnyx-950/80 rounded-3xl p-5 md:p-8 border border-stone-800 shadow-xl space-y-6">
+                    <div class="bg-white/95 rounded-3xl p-5 md:p-8 border border-amber-200/90 shadow-md space-y-6">
                         <!-- Section Category Header Banner -->
-                        <div class="bg-warmOnyx-800/90 rounded-2xl p-4 md:p-5 border border-stone-700/60 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div class="bg-rabriCream-50/90 rounded-2xl p-4 md:p-5 border border-amber-200/80 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                             <div class="flex items-center space-x-4">
                                 <div class="w-12 h-12 rounded-2xl bg-gradient-to-br ${meta.accent} text-white flex items-center justify-center shadow-md shrink-0">
                                     <i data-lucide="${meta.icon}" class="w-6 h-6"></i>
                                 </div>
                                 <div>
-                                    <h3 class="text-2xl md:text-3xl font-extrabold font-serif text-stone-100 tracking-tight">${meta.title}</h3>
-                                    <p class="text-xs md:text-sm text-stone-400 font-medium">${meta.desc}</p>
+                                    <h3 class="text-2xl md:text-3xl font-extrabold font-serif text-stone-900 tracking-tight">${meta.title}</h3>
+                                    <p class="text-xs md:text-sm text-stone-600 font-medium">${meta.desc}</p>
                                 </div>
                             </div>
                             <span class="${meta.badgeBg} text-xs font-black px-4 py-2 rounded-xl self-start sm:self-center shrink-0 tracking-wider uppercase">
@@ -653,10 +658,10 @@
             const isIceCream = item.category === 'icecream';
             
             return `
-                <div class="bg-warmOnyx-800 rounded-2xl border border-stone-800 shadow-md hover:border-faludaRose-500/50 transition-all duration-300 flex flex-col justify-between group overflow-hidden">
+                <div class="bg-white rounded-2xl border border-amber-200/80 shadow-md hover:border-faludaRose-500/50 transition-all duration-300 flex flex-col justify-between group overflow-hidden">
                     
                     <!-- Header container with high contrast badge tags -->
-                    <div class="relative h-28 w-full ${item.theme} border-b border-stone-800 flex items-center justify-between p-5 select-none overflow-hidden">
+                    <div class="relative h-28 w-full ${item.theme} border-b border-amber-200/80 flex items-center justify-between p-5 select-none overflow-hidden">
                         
                         <!-- High Contrast Tag Badge -->
                         <span class="bg-stone-900 text-kesarGold-400 border border-stone-700 text-[11px] font-black px-3.5 py-1.5 rounded-full uppercase tracking-wider shadow-lg z-10 flex items-center gap-1.5">
@@ -665,9 +670,9 @@
                         </span>
 
                         <!-- Pure Veg Symbol Badge -->
-                        <div class="bg-stone-900 border border-stone-700 rounded-lg p-1.5 shadow-sm flex items-center justify-center z-10" title="100% Pure Veg">
-                            <span class="w-3.5 h-3.5 rounded-sm border-2 border-emerald-500 p-0.5 flex items-center justify-center">
-                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                        <div class="bg-white border border-emerald-300 rounded-lg p-1.5 shadow-sm flex items-center justify-center z-10" title="100% Pure Veg">
+                            <span class="w-3.5 h-3.5 rounded-sm border-2 border-emerald-600 p-0.5 flex items-center justify-center">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
                             </span>
                         </div>
 
@@ -690,17 +695,17 @@
                         <div class="space-y-1.5">
                             <div class="flex justify-between items-start gap-2">
                                 <div class="flex items-center gap-2">
-                                    <span class="w-3 h-3 rounded-sm border border-emerald-500 p-0.5 flex items-center justify-center shrink-0" title="100% Pure Veg">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                                    <span class="w-3 h-3 rounded-sm border border-emerald-600 p-0.5 flex items-center justify-center shrink-0" title="100% Pure Veg">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
                                     </span>
-                                    <h3 class="text-base font-bold text-stone-100 font-serif leading-tight group-hover:text-faludaRose-400 transition-colors">${item.name}</h3>
+                                    <h3 class="text-base font-bold text-stone-900 font-serif leading-tight group-hover:text-faludaRose-600 transition-colors">${item.name}</h3>
                                 </div>
-                                <span class="text-[10px] font-bold text-stone-400 font-mono capitalize px-2.5 py-0.5 bg-warmOnyx-950 border border-stone-800 rounded-full shrink-0">${item.category}</span>
+                                <span class="text-[10px] font-bold text-stone-700 font-mono capitalize px-2.5 py-0.5 bg-rabriCream-200 border border-amber-200 rounded-full shrink-0">${item.category}</span>
                             </div>
-                            <p class="text-xs text-stone-400 leading-relaxed">${item.description}</p>
+                            <p class="text-xs text-stone-600 leading-relaxed">${item.description}</p>
                         </div>
-                        <div class="flex items-center justify-between pt-3 border-t border-stone-800">
-                            <span class="text-lg font-extrabold text-stone-100 font-serif">₹${item.price}</span>
+                        <div class="flex items-center justify-between pt-3 border-t border-amber-100">
+                            <span class="text-lg font-extrabold text-stone-900 font-serif">₹${item.price}</span>
                             <button onclick="addToCart('${item.name}', ${item.price})" class="bg-faludaRose-600 hover:bg-faludaRose-500 text-white text-xs font-extrabold px-4 py-2.5 rounded-xl shadow-md transition-all duration-300 flex items-center gap-1.5">
                                 <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add to Order
                             </button>
@@ -820,10 +825,8 @@
                 return;
             }
 
-            const sweetness = document.getElementById('sweetnessLevel').value;
             let orderText = `*⚡ NEW ORDER FROM RAJ FALUDA CENTER ⚡*\n\n`;
             orderText += `*Type:* ${method}\n`;
-            orderText += `*Sweetness Level:* ${sweetness}\n\n`;
             orderText += `*Items Ordered:*\n`;
             
             let grandTotal = 0;
@@ -875,6 +878,53 @@
                 toast.classList.add('translate-y-24', 'opacity-0');
             }, 2800);
         }
+    </script>
+
+    <script>
+      (function () {
+        const names = ['Black Currant','Butterscotch','Choco Strawberry','Chocolate','Kesar Pista','Rose','Shahi Gulab','Strawberry'];
+        const slides = Array.from(document.querySelectorAll('.faluda-slide'));
+        const dots = document.getElementById('faludaSlideDots');
+        const slider = document.querySelector('.faluda-slider');
+        let current = 0;
+        let paused = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        let timer;
+        names.forEach((name, index) => {
+          const dot = document.createElement('button');
+          dot.type = 'button'; dot.className = 'faluda-dot';
+          dot.setAttribute('aria-label', 'Show ' + name + ' photo');
+          dot.addEventListener('click', () => { show(index); restart(); });
+          dots.appendChild(dot);
+        });
+        function show(index) {
+          current = (index + slides.length) % slides.length;
+          slides.forEach((slide, i) => {
+            slide.classList.toggle('is-active', i === current);
+            slide.setAttribute('aria-hidden', String(i !== current));
+          });
+          Array.from(dots.children).forEach((dot, i) => {
+            dot.classList.toggle('is-active', i === current);
+            dot.setAttribute('aria-current', i === current ? 'true' : 'false');
+          });
+          document.getElementById('faludaSlideTitle').textContent = names[current];
+          document.getElementById('faludaSlideCount').textContent = (current + 1) + ' / ' + slides.length;
+        }
+        function restart() { clearInterval(timer); if (!paused) timer = setInterval(() => show(current + 1), 4000); }
+        window.moveFaludaSlide = function (direction) { show(current + direction); restart(); };
+        window.toggleFaludaAutoplay = function () {
+          paused = !paused;
+          const button = document.getElementById('faludaPauseBtn');
+          button.textContent = paused ? 'Play' : 'Pause';
+          button.setAttribute('aria-label', paused ? 'Play slideshow' : 'Pause slideshow');
+          restart();
+        };
+        slider.addEventListener('keydown', (e) => {
+          if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { e.preventDefault(); window.moveFaludaSlide(e.key === 'ArrowRight' ? 1 : -1); }
+        });
+        slider.addEventListener('mouseenter', () => clearInterval(timer));
+        slider.addEventListener('mouseleave', restart);
+        show(0); restart();
+      })();
     </script>
 </body>
 </html>
